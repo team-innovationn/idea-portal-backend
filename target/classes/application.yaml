@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: idea
+
+  # Database config
+  datasource:
+    # DATABASE connection
+    url: jdbc:mysql://localhost:3306/microDB
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    # Show sql queries made by spring data jpa
+    show-sql: false
+    properties:
+      javax:
+        persistence:
+          validation:
+            mode: none
+      hibernate:
+        format_sql: true
+
+  # Show logs in colored mode
+  output:
+    ansi:
+      enabled: ALWAYS
+
+server:
+  port:
+    8081
