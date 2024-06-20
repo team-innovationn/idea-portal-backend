@@ -13,6 +13,6 @@ public class AuditAwareImpl implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         // TODO: Retrieve current user from security context
-        return Optional.of("ADMIN");
+        return Optional.of("4316    ");
     }
 }

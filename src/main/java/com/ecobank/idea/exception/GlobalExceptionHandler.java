@@ -1,19 +1,29 @@
 package com.ecobank.idea.exception;
 
+import com.ecobank.idea.dto.ErrorResponseDTO;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.*;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.rmi.AccessException;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static org.springframework.http.HttpStatus.UNAUTHORIZED;
 
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
@@ -35,6 +45,48 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
     }
 
+    // Handle already exists exception
+    @ExceptionHandler(UserAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponseDTO> handleCustomerAlreadyExistsException(UserAlreadyExistsException exception, WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
+                HttpStatus.BAD_REQUEST,                                     // Status code
+                exception.getMessage(),                                     // Error message
+                LocalDateTime.now()                                         // Time
+        );
 
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    // Authentication exception
+    @ExceptionHandler({
+            BadCredentialsException.class,
+            UsernameNotFoundException.class,
+            AccountExpiredException.class,
+            LockedException.class,
+            DisabledException.class,
+            CredentialsExpiredException.class,
+            ExpiredJwtException.class,
+            AccessException.class
+    })
+    @ResponseStatus(UNAUTHORIZED)
+    public ResponseEntity<ErrorResponseDTO> handleAuthException(RuntimeException exception, WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
+                UNAUTHORIZED,                                                            // Status code
+                exception.getMessage(),                                                  // Error message
+                LocalDateTime.now()                                                     // Time
+        );
+        return new ResponseEntity<>(errorResponseDTO, UNAUTHORIZED);
+    }
+
+    // Runtime exceptions || Internal Server errors
+    @ExceptionHandler(RuntimeException.class)
+    public ResponseEntity<ErrorResponseDTO> handleException(RuntimeException exception, WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
+                HttpStatus.INTERNAL_SERVER_ERROR,                                          // Status code
+                exception.getMessage(),                                                  // Error message
+                LocalDateTime.now()                                                     // Time
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

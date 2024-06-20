@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
+
+
 @RestController
-@RequestMapping("/api")
+@RequestMapping(API_BASE_URL)
 public class HelloController {
 
     @GetMapping("hello")

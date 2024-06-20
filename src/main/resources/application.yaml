@@ -2,10 +2,17 @@ spring:
   application:
     name: idea
 
+  #  Configure default username and password
+  security:
+    user:
+      name: user
+      password: root
+      role: user
+
   # Database config
   datasource:
     # DATABASE connection
-    url: jdbc:mysql://localhost:3306/microDB
+    url: jdbc:mysql://localhost:3306/ideaPortal
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -28,4 +35,4 @@ spring:
 
 server:
   port:
-    8081
+    8085
