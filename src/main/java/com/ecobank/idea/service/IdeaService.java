@@ -1,7 +1,7 @@
 package com.ecobank.idea.service;
 
-import com.ecobank.idea.dto.IdeaDTO;
-import com.ecobank.idea.dto.IdeaFetchRequestDTO;
+import com.ecobank.idea.dto.idea.IdeaDTO;
+import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.entity.Idea;
 import org.springframework.data.domain.Page;
 

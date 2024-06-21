@@ -1,6 +1,8 @@
 package com.ecobank.idea.audit;
 
+import com.ecobank.idea.entity.User;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -12,7 +14,11 @@ public class AuditAwareImpl implements AuditorAware<String> {
     // Get details of user currently logged in trying to perform certain actions
     @Override
     public Optional<String> getCurrentAuditor() {
-        // TODO: Retrieve current user from security context
-        return Optional.of("4316    ");
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        int id = 0;
+        if (principal instanceof User) {
+            id = ((User) principal).getUserId();
+        }
+        return Optional.of(String.valueOf(id));
     }
 }

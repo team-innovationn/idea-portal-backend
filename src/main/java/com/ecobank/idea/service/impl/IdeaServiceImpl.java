@@ -1,7 +1,7 @@
 package com.ecobank.idea.service.impl;
 
-import com.ecobank.idea.dto.IdeaDTO;
-import com.ecobank.idea.dto.IdeaFetchRequestDTO;
+import com.ecobank.idea.dto.idea.IdeaDTO;
+import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.entity.Idea;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.mapper.IdeaMapper;
@@ -30,7 +30,7 @@ public class IdeaServiceImpl implements IdeaService {
         // Get currently logged-in user;
         String username = getCurrentUsername();
 
-            // Fetch the user entity using the username
+        // Fetch the user entity using the username
         User user = userRepository.findByEmail(username).orElseThrow(
                 () -> new RuntimeException("An internal error has occurred! User not found. Contact support")
         );
@@ -47,7 +47,12 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public Page<Idea> fetchIdeas(IdeaFetchRequestDTO request) {
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), Sort.by(request.getSortBy()));
+        // Build sort object
+        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortBy().toLowerCase()), "createdAt");
+
+        // Define the Pageable variable
+        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+
         // Implemented filtering logic here, assuming `filter` is a simple keyword search in `title` and `description`.
         if (request.getFilter() != null && !request.getFilter().isEmpty()) {
             return ideaRepository.findByTitleContainingOrDescriptionContaining(request.getFilter(), request.getFilter(), pageable);

@@ -9,6 +9,7 @@ CREATE TABLE `users` (
   `state` VARCHAR(255) NOT NULL,
   `branch` VARCHAR(255) NOT NULL,
   `password_hash` VARCHAR(255) NOT NULL,
+  `email_verified` BOOLEAN NOT NULL DEFAULT FALSE;
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NULL,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -71,6 +72,15 @@ CREATE TABLE `challenges` (
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `updated_by` INT NULL
 )
+
+-- Email verification table for verifying emails
+CREATE TABLE VerificationToken (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    token VARCHAR(255) NOT NULL,
+    user_id INT NOT NULL,
+    expiry_date TIMESTAMP NOT NULL,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+);
 
 -- INDEXES --
 --CREATE UNIQUE INDEX `comments_index_0` ON `comments` (`idea_id`, `user_id`);

@@ -1,5 +1,6 @@
 package com.ecobank.idea.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -9,6 +10,7 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.CookieValue;
 
 import java.util.Collection;
 import java.util.List;
@@ -53,6 +55,7 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "state")
     private String state;
 
+    @JsonIgnore
     @NotBlank(message = "Password must not be blank")
     @Column(name = "password_hash")
     private String password;
@@ -61,27 +64,32 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "branch")
     private String branch;
 
+    @Column(name = "email_verified")
     private boolean emailVerified;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
     private Set<Idea> ideas;
 
+    @JsonIgnore
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
+    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;
     }
 
-
+    @JsonIgnore
     @Override
     public String getUsername() {
         return email;

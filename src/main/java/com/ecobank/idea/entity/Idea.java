@@ -29,6 +29,12 @@ public class Idea extends BaseEntity {
     @Column(name = "description")
     private String description;
 
+    @Column(name = "upvotes")
+    private int upvotes;
+
+    @Column(name = "downvotes")
+    private int downvotes;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "enum('PENDING','ACCEPTED','REJECTED') DEFAULT 'PENDING'")
     private IdeaStatus status;
