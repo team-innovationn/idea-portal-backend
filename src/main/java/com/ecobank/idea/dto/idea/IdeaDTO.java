@@ -9,6 +9,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IdeaDTO {
+    private String challenge_id;
+
     @NotBlank(message = "Title must not be blank")
     @Size(min = 3, message = "Title must be at least 3 characters long")
     private String title;

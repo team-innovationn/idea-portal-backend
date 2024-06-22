@@ -1,4 +1,4 @@
-package com.ecobank.idea.dto;
+package com.ecobank.idea.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

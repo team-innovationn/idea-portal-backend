@@ -1,4 +1,4 @@
-package com.ecobank.idea.dto.idea;
+package com.ecobank.idea.dto.challenge;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public final class IdeaFetchRequestDTO {
+public class ChallengeFetchRequestDTO {
     private String filter = "";      // Default filter
     private String sortBy = "ASC";   // Default sort
     private int page = 0;  // default page number

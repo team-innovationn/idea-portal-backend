@@ -1,6 +1,7 @@
 package com.ecobank.idea.entity;
 
 import com.ecobank.idea.constants.IdeaStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -44,4 +45,9 @@ public class Idea extends BaseEntity {
 
     @OneToMany(mappedBy = "idea")
     private Set<Vote> votes;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "challenge_id")
+    private Challenge challenge;
 }

@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -29,7 +30,10 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public Page<Comment> fetchComment(String ideaId, int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
+        // Build sort object
+        Sort sort = Sort.by(Sort.Direction.fromString("desc"), "createdAt");
+
+        Pageable pageable = PageRequest.of(page, size, sort);
         return commentRepository.findByIdea_IdeaId(Long.valueOf(ideaId), pageable);
     }
 

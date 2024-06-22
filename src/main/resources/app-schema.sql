@@ -16,10 +16,24 @@ CREATE TABLE `users` (
   `updated_by` INT NULL
 )
 
+-- Challenges table
+CREATE TABLE `challenges` (
+  `challenge_id` int PRIMARY KEY AUTO_INCREMENT,
+  `title` varchar(255),
+  `content` text,
+  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+  `created_by` INT NOT NULL,
+  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `updated_by` INT NULL
+)
+
 -- Ideas table
 CREATE TABLE `ideas` (
   `idea_id` INT PRIMARY KEY AUTO_INCREMENT,
   `user_id` INT,
+  `challenge_id` INT,
+  `upvotes` INT,
+  `downvotes` INT,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
  `status` enum('PENDING','ACCEPTED','REJECTED') DEFAULT 'PENDING',
@@ -29,7 +43,8 @@ CREATE TABLE `ideas` (
   `updated_by` INT NULL,
   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
   FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
-  FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`)
+  FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`),
+  FOREIGN KEY (`challenge_id`) REFERENCES `challenges`(`challenge_id`) ON DELETE CASCADE
 )
 
 -- Comments table
@@ -41,7 +56,7 @@ CREATE TABLE `comments` (
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NOT NULL,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` INT NULL
+  `updated_by` INT NULL,
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`),
     FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
@@ -62,16 +77,6 @@ CREATE TABLE `votes` (
    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
 )
 
--- Challenges table
-CREATE TABLE `challenges` (
-  `challenge_id` int PRIMARY KEY,
-  `title` varchar(255),
-  `challenge` text,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `created_by` INT NOT NULL,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` INT NULL
-)
 
 -- Email verification table for verifying emails
 CREATE TABLE VerificationToken (

@@ -2,9 +2,11 @@ package com.ecobank.idea.service.impl;
 
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
+import com.ecobank.idea.entity.Challenge;
 import com.ecobank.idea.entity.Idea;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.mapper.IdeaMapper;
+import com.ecobank.idea.repository.ChallengeRepository;
 import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.security.SecurityUtil;
@@ -17,12 +19,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class IdeaServiceImpl implements IdeaService {
     private final UserRepository userRepository;
     private final IdeaRepository ideaRepository;
+    private final ChallengeRepository challengeRepository;
 
     @Override
     public void createIdea(IdeaDTO ideaDTO) {
@@ -34,8 +39,16 @@ public class IdeaServiceImpl implements IdeaService {
                 () -> new RuntimeException("An internal error has occurred! User not found. Contact support")
         );
 
+        Challenge challenge = null;
+        if (null != ideaDTO.getChallenge_id() && !ideaDTO.getChallenge_id().isEmpty()) {
+            Optional<Challenge> fetchChallenge = challengeRepository.findById(Long.valueOf(ideaDTO.getChallenge_id()));
+            if (fetchChallenge.isPresent()) {
+                challenge = fetchChallenge.get();
+            }
+        }
+
         // Get Idea
-        Idea idea = IdeaMapper.mapToIdea(ideaDTO, new Idea(), user);
+        Idea idea = IdeaMapper.mapToIdea(ideaDTO, new Idea(), user, challenge);
         try {
             ideaRepository.save(idea);
         } catch (Exception ex) {

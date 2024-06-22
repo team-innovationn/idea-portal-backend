@@ -3,7 +3,7 @@ package com.ecobank.idea.controller;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
-import com.ecobank.idea.dto.UserRegisterRequestDTO;
+import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.entity.VerificationToken;
 import com.ecobank.idea.repository.VerificationTokenRepository;

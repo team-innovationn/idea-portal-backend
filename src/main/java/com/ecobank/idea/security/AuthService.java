@@ -1,6 +1,6 @@
 package com.ecobank.idea.security;
 
-import com.ecobank.idea.dto.UserRegisterRequestDTO;
+import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.entity.Role;
