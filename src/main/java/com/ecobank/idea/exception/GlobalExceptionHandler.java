@@ -44,7 +44,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             String validationMsg = error.getDefaultMessage();
             validationErrors.put(fieldName, validationMsg);
         });
-        return new ResponseEntity<>(validationErrors, HttpStatus.BAD_REQUEST);
+
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(request.getDescription(false),       // API path
+                HttpStatus.BAD_REQUEST,                                     // Status code
+                validationErrors,                                     // Error message
+                LocalDateTime.now()                                         // Time
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
     // Handle already exists exception

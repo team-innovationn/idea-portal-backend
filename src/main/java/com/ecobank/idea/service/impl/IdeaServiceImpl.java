@@ -7,6 +7,7 @@ import com.ecobank.idea.entity.User;
 import com.ecobank.idea.mapper.IdeaMapper;
 import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;
+import com.ecobank.idea.security.SecurityUtil;
 import com.ecobank.idea.service.IdeaService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -28,7 +27,7 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     public void createIdea(IdeaDTO ideaDTO) {
         // Get currently logged-in user;
-        String username = getCurrentUsername();
+        String username = SecurityUtil.getCurrentUsername();
 
         // Fetch the user entity using the username
         User user = userRepository.findByEmail(username).orElseThrow(
@@ -58,16 +57,6 @@ public class IdeaServiceImpl implements IdeaService {
             return ideaRepository.findByTitleContainingOrDescriptionContaining(request.getFilter(), request.getFilter(), pageable);
         } else {
             return ideaRepository.findAll(pageable);
-        }
-    }
-
-    // Get currently logged-in user from spring context
-    private String getCurrentUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails) principal).getUsername();
-        } else {
-            return principal.toString();
         }
     }
 

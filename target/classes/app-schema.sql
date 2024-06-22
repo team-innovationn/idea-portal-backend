@@ -34,7 +34,7 @@ CREATE TABLE `ideas` (
 
 -- Comments table
 CREATE TABLE `comments` (
-  `comment_id` int PRIMARY KEY,
+  `comment_id` int PRIMARY KEY AUTO_INCREMENT,
   `idea_id` int NOT NULL,
   `user_id` int NOT NULL,
   `content` text NOT NULL,

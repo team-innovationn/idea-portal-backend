@@ -1,12 +1,15 @@
 package com.ecobank.idea.entity;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "comments")
+@Getter
+@Setter
 public class Comment extends BaseEntity {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
@@ -14,20 +17,14 @@ public class Comment extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "idea_id", nullable = false)
+    @JsonIgnore
     private Idea idea;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
+    @JsonIgnore
     private User user;
 
     @Column(nullable = false)
     private String content;
-
-//    @ManyToOne
-//    @JoinColumn(name = "created_by", nullable = false, insertable = false, updatable = false)
-//    private User createdBy;
-
-//    @ManyToOne
-//    @JoinColumn(name = "updated_by", insertable = false, updatable = false)
-//    private User updatedBy;
 }

@@ -18,7 +18,7 @@ public class ErrorResponseDTO {
     private HttpStatus errorCode;
 
     @Schema(description = "Error message details")
-    private String errorMessage;
+    private Object errorMessage;
 
     @Schema(description = "Time representing when the error happened")
     private LocalDateTime errorTime;

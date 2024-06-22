@@ -20,6 +20,4 @@ public interface IdeaService {
      * @description - Fetch ideas based on parmeters given
      */
     Page<Idea> fetchIdeas(IdeaFetchRequestDTO ideaFetchRequestDTO);
-
-
 }

@@ -1,9 +1,9 @@
 package com.ecobank.idea.controller;
 
+import com.ecobank.idea.dto.PagedResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
-import com.ecobank.idea.dto.idea.IdeaPagedResponseDTO;
 import com.ecobank.idea.entity.Idea;
 import com.ecobank.idea.service.IdeaService;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class IdeaController {
     private final IdeaService ideaService;
 
     @GetMapping("/ideas")
-    public ResponseEntity<IdeaPagedResponseDTO<Idea>> fetchIdeas(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "ASC") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PagedResponseDTO<Idea>> fetchIdeas(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "ASC") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         // Build Idea Query
         IdeaFetchRequestDTO request = new IdeaFetchRequestDTO();
         request.setFilter(filter);
@@ -36,7 +36,7 @@ public class IdeaController {
 
         // Fetch Paged Results
         Page<Idea> ideasPage = ideaService.fetchIdeas(request);
-        return ResponseEntity.status(HttpStatus.OK).body(new IdeaPagedResponseDTO<>(ideasPage));
+        return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(ideasPage));
     }
 
     @PostMapping("/idea")

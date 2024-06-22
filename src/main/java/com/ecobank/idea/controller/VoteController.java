@@ -28,6 +28,8 @@ public class VoteController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ResponseDTO> updateVote(@RequestBody VoteRequestDTO voteRequestDTO) {
         Long ideaId = Long.valueOf(voteRequestDTO.getIdeaId().trim());
+
+        // Retrieve current logged-in user id
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Long userId;
         if (!(principal instanceof User)) {
