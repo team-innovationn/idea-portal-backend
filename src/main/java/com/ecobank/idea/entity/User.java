@@ -10,7 +10,6 @@ import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.CookieValue;
 
 import java.util.Collection;
 import java.util.List;
@@ -55,14 +54,14 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "state")
     private String state;
 
+    @NotBlank(message = "Branch must not be blank")
+    @Column(name = "branch")
+    private String branch;
+
     @JsonIgnore
     @NotBlank(message = "Password must not be blank")
     @Column(name = "password_hash")
     private String password;
-
-    @NotBlank(message = "Branch must not be blank")
-    @Column(name = "branch")
-    private String branch;
 
     @Column(name = "email_verified")
     private boolean emailVerified;

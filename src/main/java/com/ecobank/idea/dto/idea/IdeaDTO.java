@@ -1,6 +1,6 @@
 package com.ecobank.idea.dto.idea;
 
-import com.ecobank.idea.constants.IdeaStatus;
+import com.ecobank.idea.constants.IdeaEnums;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -19,5 +19,5 @@ public class IdeaDTO {
     @Size(min = 3, message = "Description must be at least 3 characters long")
     private String description;
 
-    private IdeaStatus status = IdeaStatus.PENDING;
+    private IdeaEnums.Status status = IdeaEnums.Status.PENDING;
 }

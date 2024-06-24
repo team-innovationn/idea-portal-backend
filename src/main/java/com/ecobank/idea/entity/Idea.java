@@ -1,8 +1,9 @@
 package com.ecobank.idea.entity;
 
-import com.ecobank.idea.constants.IdeaStatus;
+import com.ecobank.idea.constants.IdeaEnums;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,9 +26,11 @@ public class Idea extends BaseEntity {
     private User user;
 
     @Column(name = "title")
+    @NotBlank(message = "Title must not be blank")
     private String title;
 
     @Column(name = "description")
+    @NotBlank(message = "Description must not be blank")
     private String description;
 
     @Column(name = "upvotes")
@@ -36,9 +39,22 @@ public class Idea extends BaseEntity {
     @Column(name = "downvotes")
     private int downvotes;
 
+    @Column(name = "vertical")
+    @NotBlank(message = "Vertical must not be blank")
+    private String ideaVertical;
+
+    @Column(name = "vertical")
+    @NotBlank(message = "ValueType must not be blank")
+    private String valueType;
+
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "enum('PENDING','ACCEPTED','REJECTED') DEFAULT 'PENDING'")
-    private IdeaStatus status;
+    private IdeaEnums.Status status;
+
+    @Enumerated(EnumType.STRING)
+    @Column(columnDefinition = "enum('GROUP','INDIVIDUAL') DEFAULT 'INDIVIDUAL'")
+    private IdeaEnums.Submission submission;
+
 
     @OneToMany(mappedBy = "idea")
     private Set<Comment> comments;
