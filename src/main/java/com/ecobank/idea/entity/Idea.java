@@ -26,11 +26,9 @@ public class Idea extends BaseEntity {
     private User user;
 
     @Column(name = "title")
-    @NotBlank(message = "Title must not be blank")
     private String title;
 
     @Column(name = "description")
-    @NotBlank(message = "Description must not be blank")
     private String description;
 
     @Column(name = "upvotes")
@@ -40,11 +38,9 @@ public class Idea extends BaseEntity {
     private int downvotes;
 
     @Column(name = "vertical")
-    @NotBlank(message = "Vertical must not be blank")
     private String ideaVertical;
 
-    @Column(name = "vertical")
-    @NotBlank(message = "ValueType must not be blank")
+    @Column(name = "value_type")
     private String valueType;
 
     @Enumerated(EnumType.STRING)

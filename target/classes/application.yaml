@@ -39,7 +39,7 @@ spring:
     # Show sql queries made by spring data jpa
     show-sql: false
     properties:
-      javax:
+      jakarta:
         persistence:
           validation:
             mode: none

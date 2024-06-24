@@ -19,5 +19,16 @@ public class IdeaDTO {
     @Size(min = 3, message = "Description must be at least 3 characters long")
     private String description;
 
+    @NotBlank(message = "Vertical cannot be blank")
+    @Size(min = 3, message = "Vertical must be at least 3 characters long")
+    private String ideaVertical;
+
+    @NotBlank(message = "ValueType cannot be blank")
+    @Size(min = 3, message = "ValueType must be at least 3 characters long")
+    private String valueType;
+
+    @NotBlank(message = "Submission cannot be blank")
+    private String submission;
+
     private IdeaEnums.Status status = IdeaEnums.Status.PENDING;
 }

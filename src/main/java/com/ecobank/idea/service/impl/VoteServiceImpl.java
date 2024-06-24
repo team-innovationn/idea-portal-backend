@@ -127,7 +127,6 @@ public class VoteServiceImpl implements VoteService {
 
     // Fetch user by userId
     private User getUserById(Long userId) {
-        System.out.println(userId);
         User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found to vote on idea"));
         return user;
     }

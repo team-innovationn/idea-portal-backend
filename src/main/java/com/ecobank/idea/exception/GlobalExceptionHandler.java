@@ -34,8 +34,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(
             MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-
-        // MAp to hold validation errors
+        // Map to hold validation errors
         Map<String, String> validationErrors = new HashMap<>();
         List<ObjectError> validationErrorList = ex.getBindingResult().getAllErrors();
 
@@ -45,15 +44,27 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             validationErrors.put(fieldName, validationMsg);
         });
 
-        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(request.getDescription(false),       // API path
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(request.getDescription(false),
+                HttpStatus.BAD_REQUEST,
+                validationErrors,
+                LocalDateTime.now()
+        );
+        return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
+    }
+
+    // Handle Illegal Argument Exception
+    @ResponseStatus(BAD_REQUEST)
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorResponseDTO> handleIllegalArgumentException(IllegalArgumentException exception, WebRequest webRequest) {
+        ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
                 HttpStatus.BAD_REQUEST,                                     // Status code
-                validationErrors,                                     // Error message
+                exception.getMessage(),                                     // Error message
                 LocalDateTime.now()                                         // Time
         );
         return new ResponseEntity<>(errorResponseDTO, HttpStatus.BAD_REQUEST);
     }
 
-    // Handle already exists exception
+    // Handle User Already Exists Exception
     @ExceptionHandler(UserAlreadyExistsException.class)
     public ResponseEntity<ErrorResponseDTO> handleCustomerAlreadyExistsException(UserAlreadyExistsException exception, WebRequest webRequest) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
@@ -65,6 +76,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     // Authentication exception
+    @ResponseStatus(UNAUTHORIZED)
     @ExceptionHandler({
             BadCredentialsException.class,
             UsernameNotFoundException.class,
@@ -76,7 +88,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
             AccessException.class,
             AccessDeniedException.class                 // Handle Method Level Exceptions
     })
-    @ResponseStatus(UNAUTHORIZED)
     public ResponseEntity<ErrorResponseDTO> handleAuthException(RuntimeException exception, WebRequest webRequest) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
                 UNAUTHORIZED,
@@ -89,7 +100,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     // Handle Duplication errors
     @ResponseStatus(BAD_REQUEST)
     @ExceptionHandler(DuplicateRequestException.class)
-    public ResponseEntity<ErrorResponseDTO> handleDuplicateRequest(DuplicateRequestException exception, WebRequest webRequest) {
+    public ResponseEntity<ErrorResponseDTO> handleD(DuplicateRequestException exception, WebRequest webRequest) {
         ErrorResponseDTO errorResponseDTO = new ErrorResponseDTO(webRequest.getDescription(false),       // API path
                 BAD_REQUEST,
                 exception.getMessage(),

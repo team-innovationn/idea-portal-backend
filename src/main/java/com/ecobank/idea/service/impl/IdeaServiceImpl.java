@@ -53,7 +53,7 @@ public class IdeaServiceImpl implements IdeaService {
             ideaRepository.save(idea);
         } catch (Exception ex) {
             log.error(ex.getMessage());
-            throw new RuntimeException("Error saving idea. Contact support!");
+            throw new RuntimeException("Error saving idea " + ex.getMessage() + ". Contact support!");
         }
     }
 
