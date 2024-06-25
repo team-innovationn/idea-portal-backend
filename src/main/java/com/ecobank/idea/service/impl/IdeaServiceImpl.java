@@ -1,9 +1,11 @@
 package com.ecobank.idea.service.impl;
 
+import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.entity.Challenge;
 import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.Interaction;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.mapper.IdeaMapper;
 import com.ecobank.idea.repository.ChallengeRepository;
@@ -11,6 +13,8 @@ import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.security.SecurityUtil;
 import com.ecobank.idea.service.IdeaService;
+import com.ecobank.idea.service.InteractionService;
+import com.ecobank.idea.wrapper.InteractionWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -28,6 +32,7 @@ public class IdeaServiceImpl implements IdeaService {
     private final UserRepository userRepository;
     private final IdeaRepository ideaRepository;
     private final ChallengeRepository challengeRepository;
+    private final InteractionService interactionService;
 
     @Override
     public void createIdea(IdeaDTO ideaDTO) {
@@ -39,6 +44,7 @@ public class IdeaServiceImpl implements IdeaService {
                 () -> new RuntimeException("An internal error has occurred! User not found. Contact support")
         );
 
+        // Retrieve challenge associated with idea if any
         Challenge challenge = null;
         if (null != ideaDTO.getChallenge_id() && !ideaDTO.getChallenge_id().isEmpty()) {
             Optional<Challenge> fetchChallenge = challengeRepository.findById(Long.valueOf(ideaDTO.getChallenge_id()));
@@ -47,14 +53,20 @@ public class IdeaServiceImpl implements IdeaService {
             }
         }
 
-        // Get Idea
+        // Create Idea entity instance from user input
         Idea idea = IdeaMapper.mapToIdea(ideaDTO, new Idea(), user, challenge);
+
         try {
             ideaRepository.save(idea);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new RuntimeException("Error saving idea " + ex.getMessage() + ". Contact support!");
         }
+
+        // Create an interaction
+        Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.CREATE);
+        // Save interaction
+        interactionService.saveInteraction(interaction);
     }
 
     @Override

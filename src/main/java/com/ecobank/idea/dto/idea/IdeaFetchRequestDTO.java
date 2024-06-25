@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public final class IdeaFetchRequestDTO {
     private String filter = "";      // Default filter
-    private String sortBy = "ASC";   // Default sort
+    private String sortBy = "DESC";   // Default sort
     private int page = 0;  // default page number
     private int size = 10; // default page size
 }

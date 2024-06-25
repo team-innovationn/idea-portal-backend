@@ -1,6 +1,5 @@
 package com.ecobank.idea.dto.comment;
 
-import com.ecobank.idea.entity.Comment;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

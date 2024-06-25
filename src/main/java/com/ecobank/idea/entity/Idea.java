@@ -3,7 +3,6 @@ package com.ecobank.idea.entity;
 import com.ecobank.idea.constants.IdeaEnums;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 

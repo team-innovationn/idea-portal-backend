@@ -1,15 +1,15 @@
 package com.ecobank.idea.service.impl;
 
-import com.ecobank.idea.entity.Idea;
-import com.ecobank.idea.entity.User;
-import com.ecobank.idea.entity.Vote;
-import com.ecobank.idea.entity.VoteType;
+import com.ecobank.idea.constants.InteractionEnum;
+import com.ecobank.idea.entity.*;
 import com.ecobank.idea.exception.DuplicateRequestException;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.repository.VoteRepository;
+import com.ecobank.idea.service.InteractionService;
 import com.ecobank.idea.service.VoteService;
+import com.ecobank.idea.wrapper.InteractionWrapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +20,11 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class VoteServiceImpl implements VoteService {
 
+    private final InteractionService interactionService;
     private final UserRepository userRepository;
     private final IdeaRepository ideaRepository;
     private final VoteRepository voteRepository;
 
-    /**
-     * @param
-     */
     @Override
     @Transactional
     public void upVoteIdea(Long ideaId, Long userId) {
@@ -71,6 +69,15 @@ public class VoteServiceImpl implements VoteService {
             ideaRepository.save(idea);
         } catch (RuntimeException exception) {
             throw new RuntimeException("Unable to save vote counts");
+        }
+
+        // If no interaction is found, create one
+        if (!interactionService.userInteractionExists(ideaId, userId, InteractionEnum.LIKE)) {
+            // Create an interaction
+            Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.LIKE);
+
+            // Save interaction
+            interactionService.saveInteraction(interaction);
         }
     }
 
@@ -122,25 +129,31 @@ public class VoteServiceImpl implements VoteService {
         } catch (RuntimeException exception) {
             throw new RuntimeException("Unable to save vote counts");
         }
-    }
 
+        // If no interaction is found, create one
+        if (!interactionService.userInteractionExists(ideaId, userId, InteractionEnum.LIKE)) {
+            // Create an interaction
+            Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.LIKE);
+
+            // Save interaction
+            interactionService.saveInteraction(interaction);
+        }
+    }
 
     // Fetch user by userId
     private User getUserById(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found to vote on idea"));
-        return user;
+        return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found to vote on idea"));
     }
 
     // Fetch idea by ideaId
     private Idea getIdeaById(Long userId) {
-        Idea idea = ideaRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Idea to vote not found"));
-        return idea;
+        return ideaRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Idea to vote not found"));
     }
 
-    private Vote mapToVote(User user, Idea idea, Vote vote, VoteType voteType) {
+    // Map to vote entity
+    private void mapToVote(User user, Idea idea, Vote vote, VoteType voteType) {
         vote.setUser(user);
         vote.setIdea(idea);
         vote.setVoteType(voteType);
-        return vote;
     }
 }

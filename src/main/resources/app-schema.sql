@@ -80,6 +80,21 @@ CREATE TABLE IF NOT EXISTS `votes` (
    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
 );
 
+CREATE TABLE interactions (
+    interaction_id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int NOT NULL,
+    idea_id int NOT NULL,
+    interaction_type ENUM('LIKE', 'COMMENT', 'CREATE') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
+);
+
+-- Indexes for optimization
+CREATE INDEX idx_interactions_user_id ON interactions(user_id);
+CREATE INDEX idx_interactions_idea_id ON interactions(idea_id);
+CREATE INDEX idx_interactions_user_idea ON interactions(user_id, idea_id);
+
 
 -- Email verification table for verifying emails
 CREATE TABLE IF NOT EXISTS VerificationToken (

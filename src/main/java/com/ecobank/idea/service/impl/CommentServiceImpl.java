@@ -1,8 +1,10 @@
 package com.ecobank.idea.service.impl;
 
+import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.comment.CommentDTO;
 import com.ecobank.idea.entity.Comment;
 import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.Interaction;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.mapper.CommentMapper;
@@ -11,6 +13,8 @@ import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.security.SecurityUtil;
 import com.ecobank.idea.service.CommentService;
+import com.ecobank.idea.service.InteractionService;
+import com.ecobank.idea.wrapper.InteractionWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -27,6 +31,7 @@ public class CommentServiceImpl implements CommentService {
     private final IdeaRepository ideaRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
+    private final InteractionService interactionService;
 
     @Override
     public Page<Comment> fetchComment(String ideaId, int page, int size) {
@@ -49,12 +54,19 @@ public class CommentServiceImpl implements CommentService {
         // Build up comment
         Comment comment = CommentMapper.mapToComment(commentDTO, new Comment(), user, ideaToComment);
 
+        // Save comment
         try {
             commentRepository.save(comment);
         } catch (Exception ex) {
             log.error(ex.getMessage());
             throw new RuntimeException("Error saving comment. Contact support!");
         }
+
+        // Create an interaction
+        Interaction interaction = InteractionWrapper.createInteraction(user, ideaToComment, InteractionEnum.COMMENT);
+
+        // Save interaction
+        interactionService.saveInteraction(interaction);
     }
 
     @Override

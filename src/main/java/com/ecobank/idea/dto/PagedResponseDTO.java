@@ -1,6 +1,5 @@
 package com.ecobank.idea.dto;
 
-import com.ecobank.idea.entity.Idea;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;

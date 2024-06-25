@@ -2,9 +2,6 @@ package com.ecobank.idea.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,19 +22,13 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "user_id")
     private int userId;
 
-    @NotBlank(message = "Firstname must not be blank")
-    @Size(min = 3, message = "FirstName must be at least 3 characters long")
     @Column(name = "first_name")
     private String firstName;
 
-    @NotBlank(message = "Lastname must not be blank")
-    @Size(min = 3, message = "LastName must be at least 3 characters long")
     @Column(name = "last_name")
     private String lastName;
 
     // Email address
-    @NotBlank(message = "Email must not be blank")
-    @Email(message = "Please provide a valid email address")
     @Column(name = "email", unique = true)
     private String email;
 
@@ -46,25 +37,24 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "role")
     private Role role;
 
-    @NotBlank(message = "Department must not be blank")
     @Column(name = "department")
     private String department;
 
-    @NotBlank(message = "State must not be blank")
     @Column(name = "state")
     private String state;
 
-    @NotBlank(message = "Branch must not be blank")
     @Column(name = "branch")
     private String branch;
 
     @JsonIgnore
-    @NotBlank(message = "Password must not be blank")
     @Column(name = "password_hash")
     private String password;
 
     @Column(name = "email_verified")
     private boolean emailVerified;
+
+    @Column(name = "interaction_count")
+    private int interactionCount = 0;
 
     @JsonIgnore
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)

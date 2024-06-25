@@ -10,10 +10,9 @@ import org.springframework.stereotype.Repository;
 public interface IdeaRepository extends JpaRepository<Idea, Long> {
 
     /**
-     *
-     * @param title - Title of idea
+     * @param title       - Title of idea
      * @param description - description
-     * @param pageable - pagination
+     * @param pageable    - pagination
      * @return - return ideas based on the filter conditions
      */
     Page<Idea> findByTitleContainingOrDescriptionContaining(String title, String description, Pageable pageable);

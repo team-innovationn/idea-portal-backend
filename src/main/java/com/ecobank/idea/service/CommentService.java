@@ -15,5 +15,5 @@ public interface CommentService {
     boolean deleteComment(String commentId);
 
     // Update comment
-    Comment updateComment(CommentDTO commentDTO,  String commentId);
+    Comment updateComment(CommentDTO commentDTO, String commentId);
 }

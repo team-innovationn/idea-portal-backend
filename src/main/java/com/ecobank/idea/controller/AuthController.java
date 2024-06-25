@@ -1,8 +1,8 @@
 package com.ecobank.idea.controller;
 
+import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
-import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.entity.VerificationToken;
@@ -35,6 +35,13 @@ public class AuthController {
     private final VerificationTokenRepository tokenRepository;
 //    private final EmailService emailService;
 
+    private static Date calculateExpiryDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
+        calendar.add(Calendar.MINUTE, 60);
+        return new Date(calendar.getTime().getTime());
+    }
+
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> registerUser(@Valid @RequestBody UserRegisterRequestDTO registerRequestDTO) {
         User user = authService.register(registerRequestDTO);
@@ -61,12 +68,5 @@ public class AuthController {
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
-    }
-
-    private static Date calculateExpiryDate() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Timestamp(calendar.getTime().getTime()));
-        calendar.add(Calendar.MINUTE, 60);
-        return new Date(calendar.getTime().getTime());
     }
 }
