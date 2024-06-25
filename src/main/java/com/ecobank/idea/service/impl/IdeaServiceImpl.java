@@ -40,9 +40,7 @@ public class IdeaServiceImpl implements IdeaService {
         String username = SecurityUtil.getCurrentUsername();
 
         // Fetch the user entity using the username
-        User user = userRepository.findByEmail(username).orElseThrow(
-                () -> new RuntimeException("An internal error has occurred! User not found. Contact support")
-        );
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("An internal error has occurred! User not found. Contact support"));
 
         // Retrieve challenge associated with idea if any
         Challenge challenge = null;
@@ -52,7 +50,6 @@ public class IdeaServiceImpl implements IdeaService {
                 challenge = fetchChallenge.get();
             }
         }
-
         // Create Idea entity instance from user input
         Idea idea = IdeaMapper.mapToIdea(ideaDTO, new Idea(), user, challenge);
 
@@ -65,24 +62,30 @@ public class IdeaServiceImpl implements IdeaService {
 
         // Create an interaction
         Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.CREATE);
+
         // Save interaction
         interactionService.saveInteraction(interaction);
     }
 
     @Override
-    public Page<Idea> fetchIdeas(IdeaFetchRequestDTO request) {
+    public Page<Idea> fetchIdeas(IdeaFetchRequestDTO requestDTO) {
+        String sortBy = "createdAt";
+
+        if (null != requestDTO.getSortBy() || !requestDTO.getSortBy().isEmpty()) {
+            sortBy = requestDTO.getSortBy();
+        }
+
         // Build sort object
-        Sort sort = Sort.by(Sort.Direction.fromString(request.getSortBy().toLowerCase()), "createdAt");
+        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), sortBy);
 
         // Define the Pageable variable
-        Pageable pageable = PageRequest.of(request.getPage(), request.getSize(), sort);
+        Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);
 
         // Implemented filtering logic here, assuming `filter` is a simple keyword search in `title` and `description`.
-        if (request.getFilter() != null && !request.getFilter().isEmpty()) {
-            return ideaRepository.findByTitleContainingOrDescriptionContaining(request.getFilter(), request.getFilter(), pageable);
+        if (requestDTO.getFilter() != null && !requestDTO.getFilter().isEmpty()) {
+            return ideaRepository.findByTitleContainingOrDescriptionContaining(requestDTO.getFilter(), requestDTO.getFilter(), pageable);
         } else {
             return ideaRepository.findAll(pageable);
         }
     }
-
 }

@@ -1,6 +1,7 @@
 package com.ecobank.idea.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -54,6 +55,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean emailVerified;
 
     @Column(name = "interaction_count")
+    @JsonProperty("interactions")
     private int interactionCount = 0;
 
     @JsonIgnore
