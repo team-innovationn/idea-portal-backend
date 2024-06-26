@@ -26,7 +26,7 @@ public class IdeaController {
     private final IdeaService ideaService;
 
     @GetMapping("/ideas")
-    public ResponseEntity<PagedResponseDTO<Idea>> fetchIdeas(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "DESC") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PagedResponseDTO<Idea>> fetchIdeas(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         // Build Idea Query
         IdeaFetchRequestDTO request = new IdeaFetchRequestDTO();
         request.setFilter(filter);

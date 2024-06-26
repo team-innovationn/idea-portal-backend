@@ -60,6 +60,17 @@ public class IdeaServiceImpl implements IdeaService {
             throw new RuntimeException("Error saving idea " + ex.getMessage() + ". Contact support!");
         }
 
+        // Increment user Idea count'
+        user.setIdeaCount(user.getIdeaCount() + 1);
+
+        // Persist user
+        try {
+            userRepository.save(user);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException("Error saving user idea count: " + ex.getMessage());
+        }
+
         // Create an interaction
         Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.CREATE);
 
@@ -69,14 +80,8 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public Page<Idea> fetchIdeas(IdeaFetchRequestDTO requestDTO) {
-        String sortBy = "createdAt";
-
-        if (null != requestDTO.getSortBy() || !requestDTO.getSortBy().isEmpty()) {
-            sortBy = requestDTO.getSortBy();
-        }
-
         // Build sort object
-        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), sortBy);
+        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), requestDTO.getSortBy());
 
         // Define the Pageable variable
         Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);
