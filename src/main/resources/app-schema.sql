@@ -36,10 +36,10 @@ CREATE TABLE IF NOT EXISTS `ideas` (
   `challenge_id` INT,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
-  `upvotes` INT,
-  `downvotes` INT,
+  `upvotes` INT NOT NULL DEFAULT 0,
   `vertical` VARCHAR(255) NOT NULL,
   `value_type` VARCHAR(255) NOT NULL,
+  `interaction_count` INT NOT NULL DEFAULT 0,
  `status` enum('PENDING','APPROVED','REJECTED', 'IN-REVIEW') NOT NULL DEFAULT 'PENDING',
  `submission` enum('INDIVIDUAL','GROUP') NOT NULL DEFAULT 'INDIVIDUAL',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -73,7 +73,7 @@ CREATE TABLE IF NOT EXISTS `votes` (
   `vote_id` int PRIMARY KEY AUTO_INCREMENT,
   `idea_id` int NOT NULL,
   `user_id` int NOT NULL,
-  `vote_type` enum('UPVOTE','DOWNVOTE') NOT NULL,
+  `upvote` BOOLEAN NOT NULL DEFAULT FALSE,
   `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
   `created_by` INT NOT NULL,
   `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -92,10 +92,25 @@ CREATE TABLE interactions (
     FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
 );
 
+CREATE TABLE engagements (
+    engagement_id int PRIMARY KEY AUTO_INCREMENT,
+    user_id int NOT NULL,
+    idea_id int NOT NULL,
+    engagement_type ENUM('LIKE', 'COMMENT', 'VIEW') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
+);
+
 -- Indexes for optimization
 CREATE INDEX idx_interactions_user_id ON interactions(user_id);
 CREATE INDEX idx_interactions_idea_id ON interactions(idea_id);
 CREATE INDEX idx_interactions_user_idea ON interactions(user_id, idea_id);
+
+-- Indexes for optimization
+CREATE INDEX idx_engagements_user_id ON engagements(user_id);
+CREATE INDEX idx_engagements_idea_id ON engagements(idea_id);
+CREATE INDEX idx_engagements_user_idea ON engagements(user_id, idea_id);
 
 
 -- Email verification table for verifying emails

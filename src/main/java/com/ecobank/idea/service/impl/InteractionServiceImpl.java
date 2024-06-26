@@ -6,7 +6,7 @@ import com.ecobank.idea.entity.User;
 import com.ecobank.idea.repository.InteractionRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.service.InteractionService;
-import com.ecobank.idea.wrapper.InteractionWrapper;
+import com.ecobank.idea.util.InteractionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -39,7 +39,7 @@ public class InteractionServiceImpl implements InteractionService {
         User user = interaction.getUser();
 
         // Calculate interaction weight
-        int incrementValue = InteractionWrapper.getInteractionValue(interaction.getInteractionType());
+        int incrementValue = InteractionUtil.getInteractionValue(interaction.getInteractionType());
 
         // Increment user interactions
         user.setInteractionCount(user.getInteractionCount() + incrementValue);

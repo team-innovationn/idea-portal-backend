@@ -11,5 +11,5 @@ public interface VoteService {
      * @param ideaId
      * @param userId
      */
-    void downVoteIdea(Long ideaId, Long userId);
+//    void downVoteIdea(Long ideaId, Long userId);
 }

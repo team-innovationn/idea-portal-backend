@@ -10,5 +10,4 @@ import lombok.ToString;
 @ToString
 public class VoteRequestDTO {
     private String ideaId;
-    private VoteType voteType;
 }

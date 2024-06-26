@@ -19,7 +19,7 @@ public class JwtUtil {
     private static final String SECRET_KEY = "HoX88WU2Q4oxxRxEyn3PwTbBq5yvhPn6lKyQB3MkGMQ";
 
     // Expiry time for tokens
-    private static final int expireInMs = 300 * 10000;          // 50 minutes
+    private static final int expireInMs = 300 * 1000000;          // 50 minutes
 
     // Generate Sign in key
     private Key getSignInKey() {

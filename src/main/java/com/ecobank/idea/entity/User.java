@@ -58,7 +58,6 @@ public class User extends BaseEntity implements UserDetails {
     @JsonProperty("interactions")
     private int interactionCount = 0;
 
-
     @Column(name = "idea_count")
     private int ideaCount = 0;
 

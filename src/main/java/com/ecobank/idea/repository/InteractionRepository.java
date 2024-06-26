@@ -17,9 +17,6 @@ public interface InteractionRepository extends JpaRepository<Interaction, Long> 
     @Query("SELECT i.user FROM Interaction i GROUP BY i.user ORDER BY COUNT(i) DESC")
     List<User> findUserWithMostInteractions(Pageable pageable);
 
-    @Query("SELECT i FROM Interaction i WHERE i.idea.id = :ideaId AND i.user.id = :userId")
-    Optional<Interaction> findInteractionByIdeaIdAndUserId(@Param("ideaId") Long ideaId, @Param("userId") Long userId);
-
     @Query("SELECT i FROM Interaction i WHERE i.idea.id = :ideaId AND i.user.id = :userId AND i.interactionType = :interactionType")
     Optional<Interaction> findInteractionByIdeaIdUserIdAndInteractionType(@Param("ideaId") Long ideaId, @Param("userId") Long userId, @Param("interactionType") InteractionEnum interactionType);
 }

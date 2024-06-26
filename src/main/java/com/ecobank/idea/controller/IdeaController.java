@@ -1,5 +1,6 @@
 package com.ecobank.idea.controller;
 
+import com.ecobank.idea.constants.IdeaEnums;
 import com.ecobank.idea.dto.PagedResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.idea.IdeaDTO;
@@ -38,6 +39,19 @@ public class IdeaController {
         Page<Idea> ideasPage = ideaService.fetchIdeas(request);
         return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(ideasPage));
     }
+
+//    @GetMapping("/ideas/users")
+//    public ResponseEntity<PagedResponseDTO<Object[]>> fetchUsersWithMostIdeas(@RequestParam(required = true) String ideaStatus, @RequestParam(required = false) String filter, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+//        // Build Idea Query
+//        IdeaFetchRequestDTO request = new IdeaFetchRequestDTO();
+//        request.setFilter(filter);
+//        request.setSortBy(sortBy);
+//        request.setPage(page);
+//        request.setSize(size);
+//
+//        Page<Object[]> usersPage = ideaService.findUsersWithMostApprovedIdeas(IdeaEnums.Status.valueOf(ideaStatus), request);
+//        return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(usersPage));
+//    }
 
     @PostMapping("/idea")
     @PreAuthorize("hasAuthority('USER')")

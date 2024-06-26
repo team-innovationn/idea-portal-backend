@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Entity
 @Table(name = "votes")
 @Getter
 @Setter
+@ToString
 public class Vote extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,8 +26,4 @@ public class Vote extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
-
-    @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum('UPVOTE','DOWNVOTE') NOT NULL")
-    private VoteType voteType;
 }

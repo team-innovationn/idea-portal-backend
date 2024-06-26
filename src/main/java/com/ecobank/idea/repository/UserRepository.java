@@ -1,5 +1,6 @@
 package com.ecobank.idea.repository;
 
+import com.ecobank.idea.constants.IdeaEnums;
 import com.ecobank.idea.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,4 +28,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     // Sort Users by interactions
     Page<User> findAllByOrderByInteractionCountDesc(Pageable pageable);
+//
+//    @Query("SELECT u FROM User u JOIN u.ideas i WHERE i.approved = true GROUP BY u ORDER BY COUNT(i) DESC")
+//    List<User> findUsersWithMostApprovedIdeas(@Param("status") IdeaEnums.Status status, Pageable pageable);
 }

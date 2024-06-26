@@ -3,7 +3,6 @@ package com.ecobank.idea.controller;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.vote.VoteRequestDTO;
 import com.ecobank.idea.entity.User;
-import com.ecobank.idea.entity.VoteType;
 import com.ecobank.idea.service.VoteService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,18 +27,16 @@ public class VoteController {
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ResponseDTO> updateVote(@RequestBody VoteRequestDTO voteRequestDTO) {
         Long ideaId = Long.valueOf(voteRequestDTO.getIdeaId().trim());
-
         // Retrieve current logged-in user id
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Long userId;
+        long userId;
         if (!(principal instanceof User)) {
             throw new RuntimeException("Unable to get ID of current logged in User");
         }
         userId = (long) ((User) principal).getUserId();
-        switch (voteRequestDTO.getVoteType()) {
-            case VoteType.UPVOTE -> voteService.upVoteIdea(ideaId, userId);
-            case VoteType.DOWNVOTE -> voteService.downVoteIdea(ideaId, userId);
-        }
+
+        // Vote or unvote idea
+        voteService.upVoteIdea(ideaId, userId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.OK, "Vote successful"));
     }
 }

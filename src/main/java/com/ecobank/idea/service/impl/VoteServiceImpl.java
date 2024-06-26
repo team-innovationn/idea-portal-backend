@@ -1,15 +1,17 @@
 package com.ecobank.idea.service.impl;
 
+import com.ecobank.idea.constants.EngagementEnum;
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.entity.*;
-import com.ecobank.idea.exception.DuplicateRequestException;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.repository.VoteRepository;
+import com.ecobank.idea.service.EngagementService;
 import com.ecobank.idea.service.InteractionService;
 import com.ecobank.idea.service.VoteService;
-import com.ecobank.idea.wrapper.InteractionWrapper;
+import com.ecobank.idea.util.EngagementUtil;
+import com.ecobank.idea.util.InteractionUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ import java.util.Optional;
 public class VoteServiceImpl implements VoteService {
 
     private final InteractionService interactionService;
+    private final EngagementService engagementService;
     private final UserRepository userRepository;
     private final IdeaRepository ideaRepository;
     private final VoteRepository voteRepository;
@@ -28,115 +31,57 @@ public class VoteServiceImpl implements VoteService {
     @Override
     @Transactional
     public void upVoteIdea(Long ideaId, Long userId) {
-        Vote vote;
-        boolean voteExists = false;
+        // Fetch Idea
+        Idea idea = getIdeaById(ideaId);
 
         // Check if a vote entry exists
         Optional<Vote> userVote = voteRepository.findByUserIdAndIdeaId(userId, ideaId);
 
-        // If no vote found, create one with an upvote
-        if (userVote.isEmpty()) {
-            vote = new Vote();
-        } else if (userVote.get().getVoteType() == VoteType.UPVOTE) {
-            // If a vote exists and there it's an upvote.
-            throw new DuplicateRequestException("User has already voted on this idea");
-        } else {
-            voteExists = true;
-            vote = userVote.get();
+        // If vote exists? delete it && decrease idea upvotes
+        if (userVote.isPresent()) {
+            try {
+                voteRepository.deleteByUserIdAndIdeaId(userId, ideaId);
+                idea.setUpvotes(idea.getUpvotes() - 1);
+                ideaRepository.save(idea);
+                return;
+            } catch (Exception e) {
+                throw new RuntimeException("Unable to delete vote: " + e.getMessage());
+            }
         }
+        // Create new vote
+        Vote vote = new Vote();
 
-        // Retrieve idea and votes
+        // Get user required for a vote entry
         User user = getUserById(userId);
-        Idea idea = getIdeaById(ideaId);
 
-        // Map upvote
-        mapToVote(user, idea, vote, VoteType.UPVOTE);
+        // Create a vote entry
+        mapToVote(user, idea, vote);
 
+        // Save vote
         try {
             voteRepository.save(vote);
+            idea.setUpvotes(idea.getUpvotes() + 1);
+            ideaRepository.save(idea);
         } catch (Exception exception) {
             throw new RuntimeException("Unable to vote: " + exception.getMessage());
         }
 
-        // Increase upvote on idea
-        try {
-            idea.setUpvotes(idea.getUpvotes() + 1);
-
-            // Decrease the downvote, if vote has been registered as one
-            if (voteExists) {
-                idea.setDownvotes(idea.getDownvotes() - 1);
-            }
-            ideaRepository.save(idea);
-        } catch (RuntimeException exception) {
-            throw new RuntimeException("Unable to save vote counts");
-        }
-
         // If no interaction is found, create one
         if (!interactionService.userInteractionExists(ideaId, userId, InteractionEnum.LIKE)) {
             // Create an interaction
-            Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.LIKE);
+            Interaction interaction = InteractionUtil.createInteraction(user, idea, InteractionEnum.LIKE);
 
             // Save interaction
             interactionService.saveInteraction(interaction);
         }
-    }
 
-    /**
-     * @param
-     */
-    @Override
-    @Transactional
-    public void downVoteIdea(Long ideaId, Long userId) {
-        Vote vote;
-        boolean voteExists = false;
+        if (!engagementService.userEngagementExists(ideaId, userId, EngagementEnum.LIKE)) {
+            // Create engagement
+            Engagement engagement = EngagementUtil.createEngagement(user, idea, EngagementEnum.LIKE);
+            System.out.println(engagement.toString());
 
-        // Check if a vote entry exists
-        Optional<Vote> userVote = voteRepository.findByUserIdAndIdeaId(userId, ideaId);
-
-        // If no vote found, create one with an upvote
-        if (userVote.isEmpty()) {
-            vote = new Vote();
-        } else if (userVote.get().getVoteType() == VoteType.DOWNVOTE) {
-            // If a vote exists and there it's an upvote.
-            throw new DuplicateRequestException("User has already down voted on this idea");
-        } else {
-            voteExists = true;
-            vote = userVote.get();
-        }
-
-        // Retrieve idea and votes
-        User user = getUserById(userId);
-        Idea idea = getIdeaById(ideaId);
-
-        // Map upvote
-        mapToVote(user, idea, vote, VoteType.DOWNVOTE);
-
-        try {
-            voteRepository.save(vote);
-        } catch (Exception exception) {
-            throw new RuntimeException("Unable to vote");
-        }
-
-        // Increase downvote on idea
-        try {
-            idea.setDownvotes(idea.getDownvotes() + 1);
-
-            // Decrease the upvote, if vote has been registered as one
-            if (voteExists) {
-                idea.setUpvotes(idea.getUpvotes() - 1);
-            }
-            ideaRepository.save(idea);
-        } catch (RuntimeException exception) {
-            throw new RuntimeException("Unable to save vote counts");
-        }
-
-        // If no interaction is found, create one
-        if (!interactionService.userInteractionExists(ideaId, userId, InteractionEnum.LIKE)) {
-            // Create an interaction
-            Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.LIKE);
-
-            // Save interaction
-            interactionService.saveInteraction(interaction);
+            // Save engagement
+            engagementService.saveEngagement(engagement);
         }
     }
 
@@ -151,9 +96,8 @@ public class VoteServiceImpl implements VoteService {
     }
 
     // Map to vote entity
-    private void mapToVote(User user, Idea idea, Vote vote, VoteType voteType) {
+    private void mapToVote(User user, Idea idea, Vote vote) {
         vote.setUser(user);
         vote.setIdea(idea);
-        vote.setVoteType(voteType);
     }
 }

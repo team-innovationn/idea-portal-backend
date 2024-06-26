@@ -2,6 +2,7 @@ package com.ecobank.idea.entity;
 
 import com.ecobank.idea.constants.IdeaEnums;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,14 +34,15 @@ public class Idea extends BaseEntity {
     @Column(name = "upvotes")
     private int upvotes;
 
-    @Column(name = "downvotes")
-    private int downvotes;
-
     @Column(name = "vertical")
     private String ideaVertical;
 
     @Column(name = "value_type")
     private String valueType;
+
+    @Column(name = "engagement_column")
+    @JsonProperty("engagements")
+    private int engagementCount = 0;
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "enum('PENDING','ACCEPTED','REJECTED') DEFAULT 'PENDING'")

@@ -1,12 +1,12 @@
-package com.ecobank.idea.wrapper;
+package com.ecobank.idea.util;
 
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.entity.Idea;
 import com.ecobank.idea.entity.Interaction;
 import com.ecobank.idea.entity.User;
 
-public final class InteractionWrapper {
-    private InteractionWrapper() {
+public final class InteractionUtil {
+    private InteractionUtil() {
 
     }
 

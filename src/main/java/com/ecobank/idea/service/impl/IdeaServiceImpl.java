@@ -14,7 +14,7 @@ import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.security.SecurityUtil;
 import com.ecobank.idea.service.IdeaService;
 import com.ecobank.idea.service.InteractionService;
-import com.ecobank.idea.wrapper.InteractionWrapper;
+import com.ecobank.idea.util.InteractionUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -72,7 +72,7 @@ public class IdeaServiceImpl implements IdeaService {
         }
 
         // Create an interaction
-        Interaction interaction = InteractionWrapper.createInteraction(user, idea, InteractionEnum.CREATE);
+        Interaction interaction = InteractionUtil.createInteraction(user, idea, InteractionEnum.CREATE);
 
         // Save interaction
         interactionService.saveInteraction(interaction);
