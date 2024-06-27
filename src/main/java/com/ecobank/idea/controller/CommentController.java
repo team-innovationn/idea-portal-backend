@@ -3,6 +3,7 @@ package com.ecobank.idea.controller;
 import com.ecobank.idea.dto.PagedResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.comment.CommentDTO;
+import com.ecobank.idea.dto.comment.CommentReplyDTO;
 import com.ecobank.idea.entity.Comment;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.service.CommentService;
@@ -40,9 +41,15 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Comment created successfully"));
     }
 
+  @PostMapping("/comment/reply")
+    public ResponseEntity<ResponseDTO> replyComment(@Valid @RequestBody CommentReplyDTO commentReplyDTO) {
+        commentService.replyToComment(commentReplyDTO);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Comment replied successfully"));
+    }
+
     @DeleteMapping("/comment")
-    public ResponseEntity<ResponseDTO> deleteComment(@RequestParam(required = true) String ideaId) {
-        boolean isCommentDeleted = commentService.deleteComment(ideaId);
+    public ResponseEntity<ResponseDTO> deleteComment(@RequestParam(required = true) String commentId) {
+        boolean isCommentDeleted = commentService.deleteComment(commentId);
         if (!isCommentDeleted) {
             throw new ResourceNotFoundException("Comment not found!");
         }

@@ -55,6 +55,7 @@ CREATE TABLE IF NOT EXISTS `ideas` (
 -- Comments table
 CREATE TABLE IF NOT EXISTS `comments` (
   `comment_id` int PRIMARY KEY AUTO_INCREMENT,
+   `parent_comment_id` int NULL,
   `idea_id` int NOT NULL,
   `user_id` int NOT NULL,
   `content` text NOT NULL,

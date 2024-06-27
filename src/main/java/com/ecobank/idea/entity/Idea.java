@@ -52,7 +52,6 @@ public class Idea extends BaseEntity {
     @Column(columnDefinition = "enum('GROUP','INDIVIDUAL') DEFAULT 'INDIVIDUAL'")
     private IdeaEnums.Submission submission;
 
-
     @OneToMany(mappedBy = "idea")
     private Set<Comment> comments;
 

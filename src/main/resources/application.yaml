@@ -46,10 +46,10 @@ spring:
       hibernate:
         format_sql: true
 
-  # Show logs in colored mode
-  output:
-    ansi:
-      enabled: ALWAYS
+    # Show logs in colored mode
+    output:
+      ansi:
+        enabled: ALWAYS
 
 server:
   port:

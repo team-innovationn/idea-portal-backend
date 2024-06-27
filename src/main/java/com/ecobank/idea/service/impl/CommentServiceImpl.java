@@ -3,6 +3,7 @@ package com.ecobank.idea.service.impl;
 import com.ecobank.idea.constants.EngagementEnum;
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.comment.CommentDTO;
+import com.ecobank.idea.dto.comment.CommentReplyDTO;
 import com.ecobank.idea.entity.*;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.mapper.CommentMapper;
@@ -77,6 +78,44 @@ public class CommentServiceImpl implements CommentService {
         engagementService.saveEngagement(engagement);
     }
 
+    // Reply to comment
+    @Override
+    public void replyToComment(CommentReplyDTO commentReplyDTO) {
+        Comment parentComment = commentRepository.findById(commentReplyDTO.getCommentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Comment to reply does not exist"));
+        Idea idea = parentComment.getIdea();
+        User user = parentComment.getUser();
+
+        // Build up comment
+        Comment childComment = new Comment();
+        childComment.setUser(user);
+        childComment.setIdea(idea);
+        childComment.setContent(commentReplyDTO.getContent());
+        childComment.setParentComment(parentComment);
+
+
+        // Save comment
+        try {
+            // Save child comment
+            commentRepository.save(childComment);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException("Error saving reply." + ex.getMessage() + " Contact support!");
+        }
+
+        // Create an interaction
+        Interaction interaction = InteractionUtil.createInteraction(user, idea, InteractionEnum.COMMENT);
+
+        // Save interaction
+        interactionService.saveInteraction(interaction);
+
+        // Create an idea engagement
+        Engagement engagement = EngagementUtil.createEngagement(user, idea, EngagementEnum.COMMENT);
+
+        // Save idea engagement
+        engagementService.saveEngagement(engagement);
+    }
+
     @Override
     public boolean deleteComment(String commentId) {
         int rowsAffected;
@@ -99,5 +138,16 @@ public class CommentServiceImpl implements CommentService {
             throw new RuntimeException("Error saving comment. Contact support!");
         }
         return updatedComment;
+    }
+
+
+    // Fetch user by userId
+    private User getUserByEmail(String username) {
+        return userRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User not found to vote on idea"));
+    }
+
+    // Fetch idea by ideaId
+    private Idea getIdeaById(Long userId) {
+        return ideaRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("Idea to vote not found"));
     }
 }

@@ -1,6 +1,7 @@
 package com.ecobank.idea.service;
 
 import com.ecobank.idea.dto.comment.CommentDTO;
+import com.ecobank.idea.dto.comment.CommentReplyDTO;
 import com.ecobank.idea.entity.Comment;
 import org.springframework.data.domain.Page;
 
@@ -10,6 +11,8 @@ public interface CommentService {
 
     // Create comment
     void createComment(CommentDTO commentDTO);
+
+    void replyToComment(CommentReplyDTO commentReplyDTO);
 
     // Delete comment
     boolean deleteComment(String commentId);
