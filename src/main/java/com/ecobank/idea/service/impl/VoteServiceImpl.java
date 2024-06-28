@@ -79,7 +79,6 @@ public class VoteServiceImpl implements VoteService {
         if (!engagementService.userEngagementExists(ideaId, userId, EngagementEnum.LIKE)) {
             // Create engagement
             Engagement engagement = EngagementUtil.createEngagement(user, idea, EngagementEnum.LIKE);
-            System.out.println(engagement.toString());
 
             // Save engagement
             engagementService.saveEngagement(engagement);

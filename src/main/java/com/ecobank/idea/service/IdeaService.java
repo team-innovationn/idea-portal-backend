@@ -1,5 +1,6 @@
 package com.ecobank.idea.service;
 
+import com.ecobank.idea.constants.IdeaEnums;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.entity.ValueType;
@@ -17,6 +18,8 @@ public interface IdeaService {
      * @description - Create Idea
      */
     void createIdea(IdeaDTO ideaDTO);
+
+    void updateIdeaStatus(Long ideaId, IdeaEnums.Status newStatus);
 
     /**
      * @param ideaFetchRequestDTO - Sort and Filter parameters

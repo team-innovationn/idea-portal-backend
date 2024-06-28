@@ -46,7 +46,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ResponseDTO> registerUser(@Valid @RequestBody UserRegisterRequestDTO registerRequestDTO) {
         User user = authService.register(registerRequestDTO);
-        String token = UUID.randomUUID().toString();
+//        String token = UUID.randomUUID().toString();
 //        createVerificationToken(user, token);
 //        emailService.sendVerificationEmail(user.getEmail(), token);
         ResponseDTO responseDTO = new ResponseDTO(HttpStatus.CREATED, "Account created successfully!");

@@ -15,7 +15,6 @@ import java.util.Set;
 @Entity
 @Table(name = "ideas")
 public class Idea extends BaseEntity {
-
     // Primary key
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

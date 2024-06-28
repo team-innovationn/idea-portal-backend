@@ -1,5 +1,6 @@
 package com.ecobank.idea.service.impl;
 
+import com.ecobank.idea.constants.IdeaEnums;
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
@@ -16,6 +17,10 @@ import com.ecobank.idea.security.SecurityUtil;
 import com.ecobank.idea.service.IdeaService;
 import com.ecobank.idea.service.InteractionService;
 import com.ecobank.idea.util.InteractionUtil;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -24,6 +29,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.sql.SQLOutput;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,9 +59,6 @@ public class IdeaServiceImpl implements IdeaService {
 
         // Fetch vertical
         ValueType valueType = valueTypeRepository.findById(Long.valueOf(ideaDTO.getValueTypeId())).orElseThrow(() -> new ResourceNotFoundException("Value type selected not valid"));
-
-        System.out.println(ideaVertical);
-        System.out.println(valueType);
 
         // Retrieve challenge associated with idea if any
         Challenge challenge = null;
@@ -92,6 +97,18 @@ public class IdeaServiceImpl implements IdeaService {
     }
 
     @Override
+    public void updateIdeaStatus(Long ideaId, IdeaEnums.Status newStatus) {
+        Idea idea = ideaRepository.findById(ideaId).orElseThrow(() -> new ResourceNotFoundException("Idea not found with Id: " + ideaId ));
+        idea.setStatus(newStatus);
+        try {
+            ideaRepository.save(idea);
+        } catch (Exception ex) {
+            log.error(ex.getMessage());
+            throw new RuntimeException("Error updating status of Idea " + ex.getMessage());
+        }
+    }
+
+    @Override
     public Page<Idea> fetchIdeas(IdeaFetchRequestDTO requestDTO) {
         // Build sort object
         Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), requestDTO.getSortBy());
@@ -99,12 +116,34 @@ public class IdeaServiceImpl implements IdeaService {
         // Define the Pageable variable
         Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);
 
-        // Implemented filtering logic here, assuming `filter` is a simple keyword search in `title` and `description`.
-        if (requestDTO.getFilter() != null && !requestDTO.getFilter().isEmpty()) {
-            return ideaRepository.findByTitleContainingOrDescriptionContaining(requestDTO.getFilter(), requestDTO.getFilter(), pageable);
-        } else {
-            return ideaRepository.findAll(pageable);
-        }
+        // Extract values
+        String valueTypeId = requestDTO.getValueTypeId();
+        String verticalId = requestDTO.getIdeaVerticalId();
+        LocalDateTime fromDate = requestDTO.getFromDate();
+        LocalDateTime toDate = requestDTO.getToDate();
+        IdeaEnums.Status status = requestDTO.getStatus();
+
+        return ideaRepository.findAll((Root<Idea> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
+            List<Predicate> predicates = new ArrayList<>();
+
+            if (valueTypeId != null && !valueTypeId.isEmpty()) {
+                predicates.add(cb.equal(root.get("valueType").get("valueTypeId"), valueTypeId));
+            }
+            if (verticalId != null && !verticalId.isEmpty()) {
+                predicates.add(cb.equal(root.get("ideaVertical").get("verticalId"), verticalId));
+            }
+            if (fromDate != null) {
+                predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"), fromDate));
+            }
+            if (toDate != null) {
+                predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), toDate));
+            }
+            if (status != null) {
+                predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            return cb.and(predicates.toArray(new Predicate[0]));
+        }, pageable);
     }
 
     // Fetch all idea verticals

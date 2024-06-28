@@ -27,6 +27,7 @@ public class AuthService {
 
     // Save User in the DB
     public User register(UserRegisterRequestDTO request) {
+
         // Check if user exists
         boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
         if (userExists) {
@@ -44,7 +45,7 @@ public class AuthService {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.ADMIN);
         user.setBranch(request.getBranch());
         user.setDepartment(department);
         user.setState(request.getState());

@@ -49,7 +49,6 @@ public class EngagementServiceImpl implements EngagementService {
     @Override
     public boolean userEngagementExists(long ideaId, long userId, EngagementEnum engagementEnum) {
         Optional<Engagement> engagement = engagementRepository.findEngagementByIdeaIdUserIdAndEngagementType(ideaId, userId, engagementEnum);
-        System.out.println(engagement);
         return engagement.isPresent();
     }
 }
