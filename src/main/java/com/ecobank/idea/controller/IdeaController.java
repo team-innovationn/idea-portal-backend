@@ -4,7 +4,9 @@ import com.ecobank.idea.dto.PagedResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
+import com.ecobank.idea.entity.ValueType;
 import com.ecobank.idea.entity.idea.Idea;
+import com.ecobank.idea.entity.idea.IdeaVertical;
 import com.ecobank.idea.service.IdeaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 
@@ -39,18 +43,15 @@ public class IdeaController {
         return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(ideasPage));
     }
 
-//    @GetMapping("/ideas/users")
-//    public ResponseEntity<PagedResponseDTO<Object[]>> fetchUsersWithMostIdeas(@RequestParam(required = true) String ideaStatus, @RequestParam(required = false) String filter, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-//        // Build Idea Query
-//        IdeaFetchRequestDTO request = new IdeaFetchRequestDTO();
-//        request.setFilter(filter);
-//        request.setSortBy(sortBy);
-//        request.setPage(page);
-//        request.setSize(size);
-//
-//        Page<Object[]> usersPage = ideaService.findUsersWithMostApprovedIdeas(IdeaEnums.Status.valueOf(ideaStatus), request);
-//        return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(usersPage));
-//    }
+    @GetMapping("/idea/verticals")
+    public ResponseEntity<List<IdeaVertical>> fetchIdeaVerticals() {
+        return ResponseEntity.status(HttpStatus.OK).body(ideaService.fetchIdeaVerticals());
+    }
+
+    @GetMapping("/idea/valuetypes")
+    public ResponseEntity<List<ValueType>> fetchIdeaValueTypes() {
+        return ResponseEntity.status(HttpStatus.OK).body(ideaService.fetchIdeaValueTypes());
+    }
 
     @PostMapping("/idea")
     @PreAuthorize("hasAuthority('USER')")

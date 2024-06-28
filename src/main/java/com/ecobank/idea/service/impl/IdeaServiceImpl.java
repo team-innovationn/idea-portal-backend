@@ -24,6 +24,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Slf4j
@@ -50,6 +51,9 @@ public class IdeaServiceImpl implements IdeaService {
 
         // Fetch vertical
         ValueType valueType = valueTypeRepository.findById(Long.valueOf(ideaDTO.getValueTypeId())).orElseThrow(() -> new ResourceNotFoundException("Value type selected not valid"));
+
+        System.out.println(ideaVertical);
+        System.out.println(valueType);
 
         // Retrieve challenge associated with idea if any
         Challenge challenge = null;
@@ -101,5 +105,17 @@ public class IdeaServiceImpl implements IdeaService {
         } else {
             return ideaRepository.findAll(pageable);
         }
+    }
+
+    // Fetch all idea verticals
+    @Override
+    public List<IdeaVertical> fetchIdeaVerticals() {
+        return ideaVerticalRepository.findAll();
+    }
+
+    // Fetch all idea value types
+    @Override
+    public List<ValueType> fetchIdeaValueTypes() {
+        return valueTypeRepository.findAll();
     }
 }

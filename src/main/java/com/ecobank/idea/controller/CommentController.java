@@ -17,6 +17,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 
 @Slf4j
@@ -27,12 +29,18 @@ import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 public class CommentController {
     private final CommentService commentService;
 
+//    @GetMapping("/comments")
+//    public ResponseEntity<PagedResponseDTO<Comment>> fetchComments(@RequestParam(required = true) String ideaId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+//        Page<Comment> commentPage = commentService.fetchComment(ideaId, page, size);
+//        return ResponseEntity
+//                .status(HttpStatus.OK)
+//                .body(new PagedResponseDTO<>(commentPage));
+//    }
+
     @GetMapping("/comments")
-    public ResponseEntity<PagedResponseDTO<Comment>> fetchComments(@RequestParam(required = true) String ideaId, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<Comment> commentPage = commentService.fetchComment(ideaId, page, size);
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(new PagedResponseDTO<>(commentPage));
+    public ResponseEntity<List<Comment>> getCommentsByIdeaId(@RequestParam(required = true) Long ideaId) {
+        List<Comment> comments = commentService.getCommentsByIdeaId(ideaId);
+        return ResponseEntity.status(HttpStatus.OK).body(comments);
     }
 
     @PostMapping("/comment")

@@ -61,8 +61,21 @@ public class Idea extends BaseEntity {
     private IdeaEnums.Submission submission;
 
     @OneToMany(mappedBy = "idea")
+    @JsonIgnore
     private Set<Comment> comments;
+
+    // Don't persist to the database
+    @Transient
+    private int commentLength;
 
     @OneToMany(mappedBy = "idea")
     private Set<Vote> votes;
+
+    // Retrieve the size of comments
+    public int getCommentLength() {
+        if (null ==  comments) {
+            return 0;
+        }
+        return comments.size();
+    }
 }

@@ -59,7 +59,6 @@ CREATE TABLE IF NOT EXISTS `ideas` (
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
   `upvotes` INT NOT NULL DEFAULT 0,
-  `value_type` VARCHAR(255) NOT NULL,
   `interaction_count` INT NOT NULL DEFAULT 0,
  `status` enum('PENDING','APPROVED','REJECTED', 'IN-REVIEW') NOT NULL DEFAULT 'PENDING',
  `submission` enum('INDIVIDUAL','GROUP') NOT NULL DEFAULT 'INDIVIDUAL',

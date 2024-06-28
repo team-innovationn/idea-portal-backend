@@ -20,11 +20,9 @@ public class IdeaDTO {
     private String description;
 
     @NotBlank(message = "Vertical cannot be blank")
-    @Size(min = 3, message = "Vertical must be at least 3 characters long")
     private String ideaVerticalId;
 
     @NotBlank(message = "ValueType cannot be blank")
-    @Size(min = 3, message = "ValueType must be at least 3 characters long")
     private String valueTypeId;
 
     @NotBlank(message = "Submission cannot be blank")
