@@ -47,10 +47,6 @@ public class IdeaController {
             @RequestParam(required = false) String verticalId,
             @RequestParam(required = false) String valueTypeId
     ) {
-        // Set default dates if not provided
-//        LocalDateTime from = (fromDate != null) ? LocalDate.parse(fromDate, DateTimeFormatter.ISO_DATE).atStartOfDay() : LocalDateTime.of(2000, 1, 1, 0, 0);
-//        LocalDateTime to = (toDate != null) ? LocalDate.parse(toDate, DateTimeFormatter.ISO_DATE).atTime(23, 59, 59) : LocalDateTime.now();
-
         // Build Idea Query
         IdeaFetchRequestDTO request = new IdeaFetchRequestDTO();
         request.setIdeaVerticalId(verticalId);

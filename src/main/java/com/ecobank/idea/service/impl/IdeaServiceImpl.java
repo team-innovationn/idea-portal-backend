@@ -117,12 +117,14 @@ public class IdeaServiceImpl implements IdeaService {
         Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);
 
         // Extract values
+        String filter = requestDTO.getFilter();
         String valueTypeId = requestDTO.getValueTypeId();
         String verticalId = requestDTO.getIdeaVerticalId();
         LocalDateTime fromDate = requestDTO.getFromDate();
         LocalDateTime toDate = requestDTO.getToDate();
         IdeaEnums.Status status = requestDTO.getStatus();
 
+        // Build Query
         return ideaRepository.findAll((Root<Idea> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
@@ -140,6 +142,13 @@ public class IdeaServiceImpl implements IdeaService {
             }
             if (status != null) {
                 predicates.add(cb.equal(root.get("status"), status));
+            }
+
+            if (filter != null && !filter.isEmpty()) {
+                String searchText = "%" + filter.toLowerCase().trim() + "%";
+                Predicate titlePredicate = cb.like(cb.lower(root.get("title")), searchText);
+                Predicate descriptionPredicate = cb.like(cb.lower(root.get("description")), searchText);
+                predicates.add(cb.or(titlePredicate, descriptionPredicate));
             }
 
             return cb.and(predicates.toArray(new Predicate[0]));
