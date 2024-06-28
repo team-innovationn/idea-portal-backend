@@ -1,6 +1,7 @@
-package com.ecobank.idea.entity;
+package com.ecobank.idea.entity.idea;
 
 import com.ecobank.idea.constants.IdeaEnums;
+import com.ecobank.idea.entity.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -25,6 +26,19 @@ public class Idea extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)         // Specify the foreign key relationship
     private User user;
 
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "challenge_id")
+    private Challenge challenge;
+
+    @ManyToOne
+    @JoinColumn(name = "vertical_id", nullable = false)
+    private IdeaVertical ideaVertical;
+
+    @ManyToOne
+    @JoinColumn(name = "value_type_id", nullable = false)
+    private ValueType valueType;
+
     @Column(name = "title")
     private String title;
 
@@ -34,13 +48,7 @@ public class Idea extends BaseEntity {
     @Column(name = "upvotes")
     private int upvotes;
 
-    @Column(name = "vertical")
-    private String ideaVertical;
-
-    @Column(name = "value_type")
-    private String valueType;
-
-    @Column(name = "engagement_column")
+    @Column(name = "engagement_count")
     @JsonProperty("engagements")
     private int engagementCount = 0;
 
@@ -57,9 +65,4 @@ public class Idea extends BaseEntity {
 
     @OneToMany(mappedBy = "idea")
     private Set<Vote> votes;
-
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "challenge_id")
-    private Challenge challenge;
 }

@@ -1,6 +1,7 @@
 package com.ecobank.idea.entity;
 
 import com.ecobank.idea.constants.InteractionEnum;
+import com.ecobank.idea.entity.idea.Idea;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,7 +19,7 @@ public class Interaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "interaction_id")
-    private Long id;
+    private Long interactionId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)

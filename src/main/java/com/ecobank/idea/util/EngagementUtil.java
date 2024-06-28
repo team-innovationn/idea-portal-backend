@@ -2,7 +2,7 @@ package com.ecobank.idea.util;
 
 import com.ecobank.idea.constants.EngagementEnum;
 import com.ecobank.idea.entity.Engagement;
-import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.User;
 
 public final class EngagementUtil {

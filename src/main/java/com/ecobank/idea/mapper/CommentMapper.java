@@ -1,9 +1,8 @@
 package com.ecobank.idea.mapper;
 
 import com.ecobank.idea.dto.comment.CommentDTO;
-import com.ecobank.idea.dto.comment.CommentReplyDTO;
 import com.ecobank.idea.entity.Comment;
-import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.User;
 
 public final class CommentMapper {

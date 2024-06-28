@@ -5,6 +5,7 @@ import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.comment.CommentDTO;
 import com.ecobank.idea.dto.comment.CommentReplyDTO;
 import com.ecobank.idea.entity.*;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.mapper.CommentMapper;
 import com.ecobank.idea.repository.CommentRepository;

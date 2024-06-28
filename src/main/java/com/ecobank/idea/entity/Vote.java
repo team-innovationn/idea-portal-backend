@@ -1,5 +1,6 @@
 package com.ecobank.idea.entity;
 
+import com.ecobank.idea.entity.idea.Idea;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;

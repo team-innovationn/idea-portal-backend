@@ -1,7 +1,9 @@
 package com.ecobank.idea.service.impl;
 
 import com.ecobank.idea.dto.user.UserFetchRequestDTO;
+import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.User;
+import com.ecobank.idea.repository.DepartmentRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -12,11 +14,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final DepartmentRepository departmentRepository;
 
     @Override
     public Page<User> fetchUsers(UserFetchRequestDTO requestDTO) {
@@ -38,5 +44,10 @@ public class UserServiceImpl implements UserService {
         } else {
             return userRepository.findAll(pageable);
         }
+    }
+
+    @Override
+    public List<Department> fetchDepartments() {
+        return departmentRepository.findAll();
     }
 }

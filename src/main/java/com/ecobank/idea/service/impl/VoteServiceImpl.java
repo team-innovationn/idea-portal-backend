@@ -3,6 +3,7 @@ package com.ecobank.idea.service.impl;
 import com.ecobank.idea.constants.EngagementEnum;
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.entity.*;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.repository.IdeaRepository;
 import com.ecobank.idea.repository.UserRepository;

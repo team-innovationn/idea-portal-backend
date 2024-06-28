@@ -54,13 +54,13 @@ CREATE TABLE IF NOT EXISTS `ideas` (
   `idea_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
   `user_id` BIGINT NOT NULL,
   `challenge_id` INT,
-   `vertical_id` INT NOT NULL,
   `value_type_id` INT NOT NULL,
+   `vertical_id` INT NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `description` TEXT NOT NULL,
   `upvotes` INT NOT NULL DEFAULT 0,
   `value_type` VARCHAR(255) NOT NULL,
-  `engagement_count` INT NOT NULL DEFAULT 0,
+  `interaction_count` INT NOT NULL DEFAULT 0,
  `status` enum('PENDING','APPROVED','REJECTED', 'IN-REVIEW') NOT NULL DEFAULT 'PENDING',
  `submission` enum('INDIVIDUAL','GROUP') NOT NULL DEFAULT 'INDIVIDUAL',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -125,7 +125,6 @@ CREATE TABLE engagements (
     FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
     FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
 );
-
 -- Indexes for optimization
 CREATE INDEX idx_interactions_user_id ON interactions(user_id);
 CREATE INDEX idx_interactions_idea_id ON interactions(idea_id);

@@ -4,13 +4,14 @@ import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.entity.Challenge;
-import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.ValueType;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.Interaction;
 import com.ecobank.idea.entity.User;
+import com.ecobank.idea.entity.idea.IdeaVertical;
+import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.mapper.IdeaMapper;
-import com.ecobank.idea.repository.ChallengeRepository;
-import com.ecobank.idea.repository.IdeaRepository;
-import com.ecobank.idea.repository.UserRepository;
+import com.ecobank.idea.repository.*;
 import com.ecobank.idea.security.SecurityUtil;
 import com.ecobank.idea.service.IdeaService;
 import com.ecobank.idea.service.InteractionService;
@@ -32,6 +33,8 @@ public class IdeaServiceImpl implements IdeaService {
     private final UserRepository userRepository;
     private final IdeaRepository ideaRepository;
     private final ChallengeRepository challengeRepository;
+    private final IdeaVerticalRepository ideaVerticalRepository;
+    private final ValueTypeRepository valueTypeRepository;
     private final InteractionService interactionService;
 
     @Override
@@ -42,6 +45,12 @@ public class IdeaServiceImpl implements IdeaService {
         // Fetch the user entity using the username
         User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("An internal error has occurred! User not found. Contact support"));
 
+        // Fetch vertical
+        IdeaVertical ideaVertical = ideaVerticalRepository.findById(Long.valueOf(ideaDTO.getIdeaVerticalId())).orElseThrow(() -> new ResourceNotFoundException("Idea Vertical selected not valid"));
+
+        // Fetch vertical
+        ValueType valueType = valueTypeRepository.findById(Long.valueOf(ideaDTO.getValueTypeId())).orElseThrow(() -> new ResourceNotFoundException("Value type selected not valid"));
+
         // Retrieve challenge associated with idea if any
         Challenge challenge = null;
         if (null != ideaDTO.getChallenge_id() && !ideaDTO.getChallenge_id().isEmpty()) {
@@ -51,7 +60,7 @@ public class IdeaServiceImpl implements IdeaService {
             }
         }
         // Create Idea entity instance from user input
-        Idea idea = IdeaMapper.mapToIdea(ideaDTO, new Idea(), user, challenge);
+        Idea idea = IdeaMapper.mapToIdea(ideaDTO, new Idea(), user, ideaVertical, valueType, challenge);
 
         try {
             ideaRepository.save(idea);

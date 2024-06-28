@@ -1,5 +1,6 @@
 package com.ecobank.idea.entity;
 
+import com.ecobank.idea.entity.idea.Idea;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

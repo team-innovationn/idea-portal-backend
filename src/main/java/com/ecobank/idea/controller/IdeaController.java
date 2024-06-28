@@ -1,11 +1,10 @@
 package com.ecobank.idea.controller;
 
-import com.ecobank.idea.constants.IdeaEnums;
 import com.ecobank.idea.dto.PagedResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
-import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.service.IdeaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

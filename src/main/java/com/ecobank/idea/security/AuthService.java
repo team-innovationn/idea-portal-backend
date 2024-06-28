@@ -3,9 +3,12 @@ package com.ecobank.idea.security;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
+import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.Role;
 import com.ecobank.idea.entity.User;
+import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.exception.UserAlreadyExistsException;
+import com.ecobank.idea.repository.DepartmentRepository;
 import com.ecobank.idea.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,28 +20,34 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthService {
     private final UserRepository userRepository;
+    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
     // Save User in the DB
-    public User register(UserRegisterRequestDTO registerRequestDTO) {
+    public User register(UserRegisterRequestDTO request) {
         // Check if user exists
-        boolean userExists = userRepository.findByEmail(registerRequestDTO.getEmail()).isPresent();
+        boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
         if (userExists) {
-            throw new UserAlreadyExistsException("User " + registerRequestDTO.getEmail() + " already exists");
+            throw new UserAlreadyExistsException("User " + request.getEmail() + " already exists");
         }
+
+        // Retrieve user department
+        Department department = departmentRepository.findById(Long.valueOf(request.getDepartmentId())).orElseThrow(() -> {
+            throw new ResourceNotFoundException("Department selected not found");
+        });
 
         // Build user
         User user = new User();
-        user.setFirstName(registerRequestDTO.getFirstName());
-        user.setLastName(registerRequestDTO.getLastName());
-        user.setEmail(registerRequestDTO.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequestDTO.getPassword()));
+        user.setFirstName(request.getFirstName());
+        user.setLastName(request.getLastName());
+        user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
-        user.setBranch(registerRequestDTO.getBranch());
-        user.setDepartment(registerRequestDTO.getDepartment());
-        user.setState(registerRequestDTO.getState());
+        user.setBranch(request.getBranch());
+        user.setDepartment(department);
+        user.setState(request.getState());
 
         // Save user to repository
         User userSaved = userRepository.save(user);

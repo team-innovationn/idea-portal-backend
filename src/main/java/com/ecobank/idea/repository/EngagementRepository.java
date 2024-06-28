@@ -2,7 +2,7 @@ package com.ecobank.idea.repository;
 
 import com.ecobank.idea.constants.EngagementEnum;
 import com.ecobank.idea.entity.Engagement;
-import com.ecobank.idea.entity.Idea;
+import com.ecobank.idea.entity.idea.Idea;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

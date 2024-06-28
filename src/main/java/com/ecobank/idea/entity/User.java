@@ -1,5 +1,6 @@
 package com.ecobank.idea.entity;
 
+import com.ecobank.idea.entity.idea.Idea;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
@@ -33,13 +34,15 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
+    // Foreign relationship with department - for integrity
+    @ManyToOne
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
     // Map value to Role Enum
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role;
-
-    @Column(name = "department")
-    private String department;
 
     @Column(name = "state")
     private String state;
