@@ -52,7 +52,7 @@ public class Idea extends BaseEntity {
     private int engagementCount = 0;
 
     @Enumerated(EnumType.STRING)
-    @Column(columnDefinition = "enum('PENDING','ACCEPTED','REJECTED') DEFAULT 'PENDING'")
+    @Column(columnDefinition = "enum('PENDING','APPROVED','REJECTED') DEFAULT 'PENDING'")
     private IdeaEnums.Status status;
 
     @Enumerated(EnumType.STRING)
@@ -65,13 +65,13 @@ public class Idea extends BaseEntity {
 
     // Don't persist to the database
     @Transient
-    private int commentLength;
+    private int commentCount;
 
     @OneToMany(mappedBy = "idea")
     private Set<Vote> votes;
 
     // Retrieve the size of comments
-    public int getCommentLength() {
+    public int getCommentCount() {
         if (null ==  comments) {
             return 0;
         }

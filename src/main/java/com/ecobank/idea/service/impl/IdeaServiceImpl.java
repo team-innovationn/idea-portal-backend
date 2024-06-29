@@ -4,6 +4,7 @@ import com.ecobank.idea.constants.IdeaEnums;
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
+import com.ecobank.idea.dto.idea.IdeaStatisticsDTO;
 import com.ecobank.idea.entity.Challenge;
 import com.ecobank.idea.entity.ValueType;
 import com.ecobank.idea.entity.idea.Idea;
@@ -128,22 +129,32 @@ public class IdeaServiceImpl implements IdeaService {
         return ideaRepository.findAll((Root<Idea> root, CriteriaQuery<?> query, CriteriaBuilder cb) -> {
             List<Predicate> predicates = new ArrayList<>();
 
+            // Filter based on valueTypeId
             if (valueTypeId != null && !valueTypeId.isEmpty()) {
                 predicates.add(cb.equal(root.get("valueType").get("valueTypeId"), valueTypeId));
             }
+
+            // Filter by verticalId
             if (verticalId != null && !verticalId.isEmpty()) {
                 predicates.add(cb.equal(root.get("ideaVertical").get("verticalId"), verticalId));
             }
+
+            // Filter based on from date
             if (fromDate != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("createdAt"), fromDate));
             }
+
+            // Filter based on toDate
             if (toDate != null) {
                 predicates.add(cb.lessThanOrEqualTo(root.get("createdAt"), toDate));
             }
+
+            // Filter based on Query status
             if (status != null) {
                 predicates.add(cb.equal(root.get("status"), status));
             }
 
+            // Filter title and description based on search input
             if (filter != null && !filter.isEmpty()) {
                 String searchText = "%" + filter.toLowerCase().trim() + "%";
                 Predicate titlePredicate = cb.like(cb.lower(root.get("title")), searchText);
@@ -165,5 +176,10 @@ public class IdeaServiceImpl implements IdeaService {
     @Override
     public List<ValueType> fetchIdeaValueTypes() {
         return valueTypeRepository.findAll();
+    }
+
+    @Override
+    public IdeaStatisticsDTO getIdeaStatistics() {
+        return ideaRepository.getIdeaStatistics();
     }
 }

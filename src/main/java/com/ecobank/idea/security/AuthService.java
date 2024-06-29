@@ -11,6 +11,8 @@ import com.ecobank.idea.exception.UserAlreadyExistsException;
 import com.ecobank.idea.repository.DepartmentRepository;
 import com.ecobank.idea.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -19,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
+    private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
     private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
@@ -27,17 +30,14 @@ public class AuthService {
 
     // Save User in the DB
     public User register(UserRegisterRequestDTO request) {
-
         // Check if user exists
-        boolean userExists = userRepository.findByEmail(request.getEmail()).isPresent();
-        if (userExists) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
             throw new UserAlreadyExistsException("User " + request.getEmail() + " already exists");
         }
 
         // Retrieve user department
-        Department department = departmentRepository.findById(Long.valueOf(request.getDepartmentId())).orElseThrow(() -> {
-            throw new ResourceNotFoundException("Department selected not found");
-        });
+        Department department = departmentRepository.findById(Long.valueOf(request.getDepartmentId()))
+                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
 
         // Build user
         User user = new User();
@@ -51,13 +51,13 @@ public class AuthService {
         user.setState(request.getState());
 
         // Save user to repository
-        User userSaved = userRepository.save(user);
-
-        // Check if user is saved
-        if (userSaved.getUserId() < 0 && null == userSaved) {
-            throw new RuntimeException("Unable to save User");
+        User userSaved = null;
+        try {
+            userSaved = userRepository.save(user);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            throw new RuntimeException("Unable to save User " + e.getMessage());
         }
-
         return userSaved;
     }
 

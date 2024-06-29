@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,18 +33,19 @@ public class ChallengeController {
         requestDTO.setPage(page);
         requestDTO.setFilter(filter);
         requestDTO.setSortBy(sortBy);
-
         Page<Challenge> challenges = challengeService.fetchChallenge(requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(challenges));
     }
 
     @PostMapping("/challenge")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> createChallenge(@Valid @RequestBody ChallengeDTO challengeDTO) {
         challengeService.createChallenge(challengeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Challenge created successfully"));
     }
 
     @DeleteMapping("/challenge")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> deleteChallenge(@RequestParam(required = true) String challengeId) {
         boolean isChallengeDeleted = challengeService.deleteChallenge(challengeId);
         if (!isChallengeDeleted) {
@@ -53,6 +55,7 @@ public class ChallengeController {
     }
 
     @PutMapping("/challenge")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> updateChallenge(@RequestBody ChallengeDTO challengeDTO, @RequestParam(required = true) String challengeId) {
         challengeService.updateChallenge(challengeDTO, challengeId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.OK, "Challenge updated successfully"));

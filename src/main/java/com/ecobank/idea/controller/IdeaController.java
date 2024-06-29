@@ -5,6 +5,7 @@ import com.ecobank.idea.dto.PagedResponseDTO;
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
+import com.ecobank.idea.dto.idea.IdeaStatisticsDTO;
 import com.ecobank.idea.entity.ValueType;
 import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.idea.IdeaVertical;
@@ -19,13 +20,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
-import java.time.LocalDate;
 import java.util.List;
-
 import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 
 @RestController
@@ -74,6 +70,13 @@ public class IdeaController {
         return ResponseEntity.status(HttpStatus.OK).body(ideaService.fetchIdeaValueTypes());
     }
 
+    @GetMapping("/ideas/stats")
+    public ResponseEntity<IdeaStatisticsDTO> getIdeaStatistics() {
+        IdeaStatisticsDTO statistics = ideaService.getIdeaStatistics();
+        return ResponseEntity.ok(statistics);
+    }
+
+    // Create new Idea
     @PostMapping("/idea")
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ResponseDTO> createIdea(@Valid @RequestBody IdeaDTO ideaDTO) {
@@ -81,6 +84,7 @@ public class IdeaController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Idea created successfully"));
     }
 
+    // Update Idea Status
     @PutMapping("/idea")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> updateIdeaStatus(@RequestParam Long ideaId, @RequestParam IdeaEnums.Status status) {

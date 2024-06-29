@@ -4,8 +4,7 @@ public class IdeaEnums {
     public enum Status {
         PENDING,
         APPROVED,
-        REJECTED,
-        IN_REVIEW
+        REJECTED
     }
 
     public enum Submission {
