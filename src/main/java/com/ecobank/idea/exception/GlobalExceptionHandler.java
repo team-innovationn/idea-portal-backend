@@ -1,6 +1,5 @@
 package com.ecobank.idea.exception;
 
-import com.ecobank.idea.dto.ErrorResponseDTO;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

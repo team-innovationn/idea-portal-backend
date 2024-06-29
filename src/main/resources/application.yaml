@@ -51,6 +51,12 @@ spring:
     ansi:
       enabled: ALWAYS
 
+# Configure port
 server:
   port:
     8085
+
+# Spring doc path
+springdoc:
+  api-docs:
+    path: /docs

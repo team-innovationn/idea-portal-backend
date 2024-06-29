@@ -1,4 +1,4 @@
-package com.ecobank.idea.dto;
+package com.ecobank.idea.exception;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
