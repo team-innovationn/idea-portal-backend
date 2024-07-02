@@ -9,7 +9,7 @@ import lombok.ToString;
 @ToString
 public class ChallengeFetchRequestDTO {
     private String filter = "";      // Default filter
-    private String sortBy = "ASC";   // Default sort
+    private String sortDirection = "ASC";   // Default sort
     private int page = 0;  // default page number
     private int size = 10; // default page size
 }

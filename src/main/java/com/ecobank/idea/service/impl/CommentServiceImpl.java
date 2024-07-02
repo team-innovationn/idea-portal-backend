@@ -3,8 +3,12 @@ package com.ecobank.idea.service.impl;
 import com.ecobank.idea.constants.EngagementEnum;
 import com.ecobank.idea.constants.InteractionEnum;
 import com.ecobank.idea.dto.comment.CommentDTO;
+import com.ecobank.idea.dto.comment.CommentFetchRequestDTO;
 import com.ecobank.idea.dto.comment.CommentReplyDTO;
-import com.ecobank.idea.entity.*;
+import com.ecobank.idea.entity.Comment;
+import com.ecobank.idea.entity.Engagement;
+import com.ecobank.idea.entity.Interaction;
+import com.ecobank.idea.entity.User;
 import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.mapper.CommentMapper;
@@ -39,12 +43,11 @@ public class CommentServiceImpl implements CommentService {
     private final EngagementService engagementService;
 
     @Override
-    public Page<Comment> fetchComment(String ideaId, int page, int size) {
+    public Page<Comment> fetchComment(Long ideaId, CommentFetchRequestDTO requestDTO) {
         // Build sort object
-        Sort sort = Sort.by(Sort.Direction.fromString("desc"), "createdAt");
-
-        Pageable pageable = PageRequest.of(page, size, sort);
-        return commentRepository.findByIdea_IdeaId(Long.valueOf(ideaId), pageable);
+        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection()), requestDTO.getSortBy());
+        Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);
+        return commentRepository.findByIdea_IdeaId(ideaId, pageable);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public void createComment(CommentDTO commentDTO) {
+    public Comment createComment(CommentDTO commentDTO) {
         // Get currently logged-in user;
         String username = SecurityUtil.getCurrentUsername();
 
@@ -84,13 +87,14 @@ public class CommentServiceImpl implements CommentService {
 
         // Save idea engagement
         engagementService.saveEngagement(engagement);
+
+        return comment;
     }
 
     // Reply to comment
     @Override
-    public void replyToComment(CommentReplyDTO commentReplyDTO) {
-        Comment parentComment = commentRepository.findById(commentReplyDTO.getCommentId())
-                .orElseThrow(() -> new ResourceNotFoundException("Comment to reply does not exist"));
+    public Comment replyToComment(CommentReplyDTO commentReplyDTO) {
+        Comment parentComment = commentRepository.findById(commentReplyDTO.getCommentId()).orElseThrow(() -> new ResourceNotFoundException("Comment to reply does not exist"));
         Idea idea = parentComment.getIdea();
         User user = parentComment.getUser();
 
@@ -101,6 +105,9 @@ public class CommentServiceImpl implements CommentService {
         childComment.setContent(commentReplyDTO.getContent());
         childComment.setParentComment(parentComment);
 
+        List<Comment> replies = parentComment.getReplies();
+        replies.add(childComment);
+        parentComment.setReplies(replies);
 
         // Save comment
         try {
@@ -122,6 +129,8 @@ public class CommentServiceImpl implements CommentService {
 
         // Save idea engagement
         engagementService.saveEngagement(engagement);
+
+        return parentComment;
     }
 
     @Override

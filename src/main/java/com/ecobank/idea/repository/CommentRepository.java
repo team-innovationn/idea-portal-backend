@@ -11,7 +11,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Long> {
@@ -20,8 +19,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query("delete from Comment e where e.id = ?1")
     int deleteCommentById(Long id);
 
-    //    Optional<List<Comment>> findByIdea_IdeaId(Long ideaId);
-    Page<Comment> findByIdea_IdeaId(Long ideaId, Pageable pageable);
+    @Query("SELECT c FROM Comment c LEFT JOIN FETCH c.replies WHERE c.idea.id = :ideaId AND c.parentComment IS NULL")
+    Page<Comment> findByIdea_IdeaId(@Param("ideaId") Long ideaId, Pageable pageable);
 
     @Query("SELECT c FROM Comment c LEFT JOIN FETCH c.replies WHERE c.idea.id = :ideaId AND c.parentComment IS NULL")
     List<Comment> findCommentsByIdeaIdAndParentIsNull(@Param("ideaId") Long ideaId);

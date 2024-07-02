@@ -55,12 +55,12 @@ public class ChallengeController {
             )
     })
     @GetMapping("/challenges")
-    public ResponseEntity<PagedResponseDTO<Challenge>> fetchChallenges(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "desc") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+    public ResponseEntity<PagedResponseDTO<Challenge>> fetchChallenges(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "desc") String sortDirection, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
         ChallengeFetchRequestDTO requestDTO = new ChallengeFetchRequestDTO();
         requestDTO.setSize(size);
         requestDTO.setPage(page);
         requestDTO.setFilter(filter);
-        requestDTO.setSortBy(sortBy);
+        requestDTO.setSortDirection(sortDirection);
         Page<Challenge> challenges = challengeService.fetchChallenge(requestDTO);
         return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(challenges));
     }

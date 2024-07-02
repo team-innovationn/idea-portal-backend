@@ -30,7 +30,7 @@ public class ChallengeServiceImpl implements ChallengeService {
     @Override
     public Page<Challenge> fetchChallenge(ChallengeFetchRequestDTO requestDTO) {
         // Build sort object
-        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortBy().toLowerCase()), "createdAt");
+        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), "createdAt");
 
         // Define the Pageable variable
         Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);

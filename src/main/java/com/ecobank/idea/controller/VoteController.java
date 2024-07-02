@@ -17,17 +17,14 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 
 
 @Tag(
         name = "Vote API",
-        description = "API to vote users"
+        description = "API to vote on ideas"
 )
 @RestController
 @RequestMapping(path = API_BASE_URL + "/idea/vote", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -56,6 +53,8 @@ public class VoteController {
                     )
             )
     })
+
+    @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping
     @PreAuthorize("hasAuthority('USER')")
     public ResponseEntity<ResponseDTO> updateVote(@RequestBody VoteRequestDTO voteRequestDTO) {
@@ -71,6 +70,8 @@ public class VoteController {
 
         // Vote or un-vote idea
         voteService.upVoteIdea(ideaId, userId);
+
+        System.out.println("Vote update successful");
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.OK, "Vote successful"));
     }
 }

@@ -39,6 +39,8 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(API_BASE_URL + "/auth/**").permitAll()
+
+                                // Permit documentation requests
                                 .requestMatchers("/docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                                 .anyRequest().authenticated()
                 )
