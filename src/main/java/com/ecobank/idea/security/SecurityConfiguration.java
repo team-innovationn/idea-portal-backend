@@ -39,6 +39,10 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(auth ->
                         auth
                                 .requestMatchers(API_BASE_URL + "/auth/**").permitAll()
+                                .requestMatchers(API_BASE_URL + "/ideas").permitAll()
+                                .requestMatchers(API_BASE_URL + "/users").permitAll()
+                                .requestMatchers(API_BASE_URL + "/idea/**").permitAll()
+                                .requestMatchers(API_BASE_URL + "/challenges").permitAll()
 
                                 // Permit documentation requests
                                 .requestMatchers("/docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()

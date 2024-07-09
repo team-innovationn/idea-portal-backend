@@ -84,7 +84,7 @@ public class ChallengeController {
     })
     @PostMapping("/challenge")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ResponseDTO> createChallenge(@Valid @RequestBody ChallengeDTO challengeDTO) {
+    public ResponseEntity<ResponseDTO> readLog(@Valid @RequestBody ChallengeDTO challengeDTO) {
         challengeService.createChallenge(challengeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Challenge created successfully"));
     }

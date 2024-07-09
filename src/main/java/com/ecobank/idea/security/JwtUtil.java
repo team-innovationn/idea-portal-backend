@@ -1,5 +1,6 @@
 package com.ecobank.idea.security;
 
+import com.ecobank.idea.constants.AppConstants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -19,7 +20,7 @@ public class JwtUtil {
     private static final String SECRET_KEY = "HoX88WU2Q4oxxRxEyn3PwTbBq5yvhPn6lKyQB3MkGMQ";
 
     // Expiry time for tokens
-    private static final int expireInMs = 300 * 1000000;          // 50 minutes
+//    private static final int expireInMs = 300 * 1000000;          // 50 minutes
 
     // Generate Sign in key
     private Key getSignInKey() {
@@ -39,7 +40,7 @@ public class JwtUtil {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expireInMs))
+                .setExpiration(new Date(System.currentTimeMillis() + AppConstants.TOKEN_EXPIRATION_TIME))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

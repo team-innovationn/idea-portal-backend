@@ -1,5 +1,6 @@
 package com.ecobank.idea.security;
 
+import com.ecobank.idea.constants.AppConstants;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
@@ -45,7 +46,7 @@ public class AuthService {
         user.setLastName(request.getLastName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.ADMIN);
+        user.setRole(Role.USER);
         user.setBranch(request.getBranch());
         user.setDepartment(department);
         user.setState(request.getState());
@@ -62,7 +63,6 @@ public class AuthService {
     }
 
     public AuthResponseDTO authenticate(AuthRequestDTO authRequestDTO) {
-
         // Authenticate user
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword()));
 
@@ -70,9 +70,9 @@ public class AuthService {
         User user = userRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow();
 
         // Generate token
-        String jwtToken = jwtUtil.generateToken(user);
+        String token = jwtUtil.generateToken(user);
 
         // Return token
-        return new AuthResponseDTO(jwtToken);
+        return new AuthResponseDTO(token, user, AppConstants.TOKEN_EXPIRATION_TIME);
     }
 }

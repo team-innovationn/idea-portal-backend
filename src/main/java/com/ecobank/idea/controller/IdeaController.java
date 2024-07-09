@@ -179,6 +179,7 @@ public class IdeaController {
     // Create new Idea
     @PostMapping("/idea")
     @PreAuthorize("hasAuthority('USER')")
+    @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<ResponseDTO> createIdea(@Valid @RequestBody IdeaDTO ideaDTO) {
         ideaService.createIdea(ideaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Idea created successfully"));

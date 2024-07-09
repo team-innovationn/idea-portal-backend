@@ -23,7 +23,7 @@ public class SecurityAppConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Retrieve user from DB
+    // Retrieve user details from DB
     @Bean
     public UserDetailsService userDetailsService() {
         return username -> userRepository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException("User not found!"));

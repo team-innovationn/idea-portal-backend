@@ -71,7 +71,6 @@ public class VoteController {
         // Vote or un-vote idea
         voteService.upVoteIdea(ideaId, userId);
 
-        System.out.println("Vote update successful");
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.OK, "Vote successful"));
     }
 }
