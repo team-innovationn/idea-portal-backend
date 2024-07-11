@@ -6,6 +6,7 @@ import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.dto.idea.IdeaStatisticsDTO;
+import com.ecobank.idea.dto.idea.IdeaUpdateDTO;
 import com.ecobank.idea.entity.ValueType;
 import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.idea.IdeaVertical;
@@ -153,7 +154,7 @@ public class IdeaController {
             )
     })
     @GetMapping("/ideas/stats")
-    @PreAuthorize("hasAuthority('USER')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<IdeaStatisticsDTO> getIdeaStatistics() {
         IdeaStatisticsDTO statistics = ideaService.getIdeaStatistics();
         return ResponseEntity.ok(statistics);
@@ -210,8 +211,9 @@ public class IdeaController {
     })
     @PutMapping("/idea")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<ResponseDTO> updateIdeaStatus(@RequestParam Long ideaId, @RequestParam IdeaEnums.Status status) {
-        ideaService.updateIdeaStatus(ideaId, status);
+    public ResponseEntity<ResponseDTO> updateIdeaStatus(@RequestParam Long ideaId, @RequestBody IdeaUpdateDTO ideaUpdateDTO) {
+        System.out.println(ideaUpdateDTO.getStatus());
+        ideaService.updateIdeaStatus(ideaId, IdeaEnums.Status.valueOf(ideaUpdateDTO.getStatus()));
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.CREATED, "Idea updated successfully"));
     }
 }
