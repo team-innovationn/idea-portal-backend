@@ -34,10 +34,7 @@ import java.util.List;
 
 import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 
-@Tag(
-        name = "Idea API",
-        description = "CRUD API to CREATE, UPDATE, FETCH and DELETE Ideas"
-)
+@Tag(name = "Idea API", description = "CRUD API to CREATE, UPDATE, FETCH and DELETE Ideas")
 @RestController
 @RequestMapping(path = API_BASE_URL, produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
@@ -45,35 +42,10 @@ import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 public class IdeaController {
     private final IdeaService ideaService;
 
-    @Operation(
-            summary = "Ideas API",
-            description = "Fetch ideas"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDTO.class)
-                    )
-            )
-    })
+    @Operation(summary = "Ideas API", description = "Fetch ideas")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
     @GetMapping("/ideas")
-    public ResponseEntity<PagedResponseDTO<Idea>> fetchIdeas(
-            @RequestParam(required = false) String filter,
-            @RequestParam(defaultValue = "createdAt") String sortBy,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(required = false) IdeaEnums.Status status,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate,
-            @RequestParam(required = false) String verticalId,
-            @RequestParam(required = false) String valueTypeId
-    ) {
+    public ResponseEntity<PagedResponseDTO<Idea>> fetchIdeas(@RequestParam(required = false) String filter, @RequestParam(defaultValue = "createdAt") String sortBy, @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size, @RequestParam(required = false) IdeaEnums.Status status, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime fromDate, @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime toDate, @RequestParam(required = false) String verticalId, @RequestParam(required = false) String valueTypeId) {
         // Build Idea Query
         IdeaFetchRequestDTO request = new IdeaFetchRequestDTO();
         request.setIdeaVerticalId(verticalId);
@@ -91,68 +63,23 @@ public class IdeaController {
         return ResponseEntity.status(HttpStatus.OK).body(new PagedResponseDTO<>(ideasPage));
     }
 
-    @Operation(
-            summary = "Idea Verticals",
-            description = "Fetch idea verticals"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDTO.class)
-                    )
-            )
-    })
+    @Operation(summary = "Idea Verticals", description = "Fetch idea verticals")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
     @GetMapping("/idea/verticals")
     public ResponseEntity<List<IdeaVertical>> fetchIdeaVerticals() {
         return ResponseEntity.status(HttpStatus.OK).body(ideaService.fetchIdeaVerticals());
     }
 
 
-    @Operation(
-            summary = "Idea value",
-            description = "Fetch ideas value types"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDTO.class)
-                    )
-            )
-    })
+    @Operation(summary = "Idea value", description = "Fetch ideas value types")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
     @GetMapping("/idea/valuetypes")
     public ResponseEntity<List<ValueType>> fetchIdeaValueTypes() {
         return ResponseEntity.status(HttpStatus.OK).body(ideaService.fetchIdeaValueTypes());
     }
 
-    @Operation(
-            summary = "Ideas stats API",
-            description = "Fetch ideas stats - pending, approved, rejected"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDTO.class)
-                    )
-            )
-    })
+    @Operation(summary = "Ideas stats API", description = "Fetch ideas stats - pending, approved, rejected")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
     @GetMapping("/ideas/stats")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<IdeaStatisticsDTO> getIdeaStatistics() {
@@ -160,24 +87,9 @@ public class IdeaController {
         return ResponseEntity.ok(statistics);
     }
 
-    @Operation(
-            summary = "Idea create API",
-            description = "Create ideas"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDTO.class)
-                    )
-            )
-    })
     // Create new Idea
+    @Operation(summary = "Idea create API", description = "Create ideas")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
     @PostMapping("/idea")
     @PreAuthorize("hasAuthority('USER')")
     @CrossOrigin(origins = "http://localhost:3000")
@@ -188,31 +100,11 @@ public class IdeaController {
 
 
     // Update Idea Status
-    @Operation(
-            summary = "Ideas Update API",
-            description = "Update idea status"
-    )
-    @ApiResponses({
-            @ApiResponse(
-                    responseCode = "200",
-                    description = "HTTP Status OK"
-            ),
-            @ApiResponse(
-                    responseCode = "404",
-                    description = "HTTP Status Not found - Idea not found to update"
-            ),
-            @ApiResponse(
-                    responseCode = "500",
-                    description = "HTTP Status Internal Server Error",
-                    content = @Content(
-                            schema = @Schema(implementation = ErrorResponseDTO.class)
-                    )
-            )
-    })
+    @Operation(summary = "Ideas Update API", description = "Update idea status")
+    @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "404", description = "HTTP Status Not found - Idea not found to update"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
     @PutMapping("/idea")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> updateIdeaStatus(@RequestParam Long ideaId, @RequestBody IdeaUpdateDTO ideaUpdateDTO) {
-        System.out.println(ideaUpdateDTO.getStatus());
         ideaService.updateIdeaStatus(ideaId, IdeaEnums.Status.valueOf(ideaUpdateDTO.getStatus()));
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.CREATED, "Idea updated successfully"));
     }

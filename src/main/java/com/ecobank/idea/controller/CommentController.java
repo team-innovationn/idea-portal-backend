@@ -10,6 +10,7 @@ import com.ecobank.idea.entity.Comment;
 import com.ecobank.idea.exception.ErrorResponseDTO;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.service.CommentService;
+import com.ecobank.idea.service.SseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -39,6 +40,7 @@ import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 @Validated
 public class CommentController {
     private final CommentService commentService;
+    private final SseService sseService;
 
     @Operation(
             summary = "Fetch Comment API",
@@ -103,6 +105,10 @@ public class CommentController {
     @PostMapping("/comment")
     public ResponseEntity<CommentResponseDTO> createComment(@Valid @RequestBody CommentDTO commentDTO) {
         Comment newComment = commentService.createComment(commentDTO);
+
+        // Emit event
+        // Emit a new comment event using the SseService
+        sseService.emitEvent("comment", newComment);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommentResponseDTO(HttpStatus.CREATED, "Comment created successfully", newComment));
     }
 

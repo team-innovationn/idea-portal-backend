@@ -4,6 +4,7 @@ import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.vote.VoteRequestDTO;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.exception.ErrorResponseDTO;
+import com.ecobank.idea.service.SseService;
 import com.ecobank.idea.service.VoteService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -31,6 +32,7 @@ import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 @RequiredArgsConstructor
 public class VoteController {
     private final VoteService voteService;
+    private final SseService sseService;
 
     @Operation(
             summary = "Vote API",
@@ -53,7 +55,6 @@ public class VoteController {
                     )
             )
     })
-
     @CrossOrigin(origins = "http://localhost:3000")
     @PutMapping
     @PreAuthorize("hasAuthority('USER')")
@@ -70,6 +71,11 @@ public class VoteController {
 
         // Vote or un-vote idea
         voteService.upVoteIdea(ideaId, userId);
+
+//        if (isUpvote) {
+//            // Emit a new comment event using the SseService
+//            sseService.emitEvent("comment", comment);
+//        }
 
         return ResponseEntity.status(HttpStatus.OK).body(new ResponseDTO(HttpStatus.OK, "Vote successful"));
     }
