@@ -72,7 +72,7 @@ public class Idea extends BaseEntity {
 
     // Retrieve the size of comments
     public int getCommentCount() {
-        if (null ==  comments) {
+        if (null == comments) {
             return 0;
         }
         return comments.size();

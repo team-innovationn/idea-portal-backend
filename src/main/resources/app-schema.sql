@@ -1,146 +1,146 @@
--- departments table
-CREATE TABLE IF NOT EXISTS value_types (
-    value_type_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
--- departments table
-CREATE TABLE IF NOT EXISTS departments (
-    department_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
-CREATE TABLE IF NOT EXISTS idea_verticals (
-    vertical_id INT AUTO_INCREMENT PRIMARY KEY,
-    name VARCHAR(255) NOT NULL UNIQUE
-);
-
--- Users table
-CREATE TABLE IF NOT EXISTS `users` (
-  `user_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `first_name` VARCHAR(255) NOT NULL,
-  `last_name` VARCHAR(255) NOT NULL,
-  `email` VARCHAR(255) UNIQUE NOT NULL,
-  `department_id` INT NOT NULL,
-   `role` varchar(255) NOT NULL,
-  `state` VARCHAR(255) NOT NULL,
-  `branch` VARCHAR(255) NOT NULL,
-  `password_hash` VARCHAR(255) NOT NULL,
-  `email_verified` BOOLEAN NOT NULL DEFAULT FALSE,
-  `interaction_count` INT NOT NULL DEFAULT 0,
-  `idea_count` INT NOT NULL DEFAULT 0,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `created_by` INT NULL,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` INT NULL,
-    FOREIGN KEY (`department_id`) REFERENCES `departments`(`department_id`)
-);
-
--- Challenges table
-CREATE TABLE IF NOT EXISTS `challenges` (
-  `challenge_id` int PRIMARY KEY AUTO_INCREMENT,
-  `title` varchar(255) NOT NULL,
-  `content` text NOT NULL,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `created_by` BIGINT NOT NULL,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` BIGINT NULL,
-    FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
-    FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`)
-);
-
--- Ideas table
-CREATE TABLE IF NOT EXISTS `ideas` (
-  `idea_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `user_id` BIGINT NOT NULL,
-  `challenge_id` INT,
-   `vertical_id` INT NOT NULL,
-  `value_type_id` INT NOT NULL,
-  `title` VARCHAR(255) NOT NULL,
-  `description` TEXT NOT NULL,
-  `upvotes` INT NOT NULL DEFAULT 0,
-  `engagement_count` INT NOT NULL DEFAULT 0,
- `status` enum('PENDING','APPROVED','REJECTED', 'IN-REVIEW') NOT NULL DEFAULT 'PENDING',
- `submission` enum('INDIVIDUAL','GROUP') NOT NULL DEFAULT 'INDIVIDUAL',
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `created_by` BIGINT NOT NULL,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` BIGINT NULL,
-  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-  FOREIGN KEY (`vertical_id`) REFERENCES `idea_verticals`(`vertical_id`),
-  FOREIGN KEY (`value_type_id`) REFERENCES `value_types`(`value_type_id`),
-  FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
-  FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`),
-  FOREIGN KEY (`challenge_id`) REFERENCES `challenges`(`challenge_id`) ON DELETE CASCADE
-);
-
--- Comments table
-CREATE TABLE IF NOT EXISTS `comments` (
-  `comment_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-   `parent_id` BIGINT NULL,
-  `idea_id` BIGINT NOT NULL,
-  `user_id` BIGINT NOT NULL,
-  `content` text NOT NULL,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `created_by` BIGINT NOT NULL,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` BIGINT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`),
-    FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
-    FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`)
-);
-
--- Votes table
-CREATE TABLE IF NOT EXISTS `votes` (
-  `vote_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
-  `idea_id` BIGINT NOT NULL,
-  `user_id` BIGINT NOT NULL,
-  `upvote` BOOLEAN NOT NULL DEFAULT FALSE,
-  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
-  `created_by` BIGINT NOT NULL,
-  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  `updated_by` BIGINT NULL,
-   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-   FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
-);
-
-CREATE TABLE interactions (
-    interaction_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
-    idea_id BIGINT NOT NULL,
-    interaction_type ENUM('LIKE', 'COMMENT', 'CREATE') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
-);
-
-CREATE TABLE engagements (
-    engagement_id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id BIGINT NOT NULL,
-    idea_id BIGINT NOT NULL,
-    engagement_type ENUM('LIKE', 'COMMENT', 'VIEW') NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
-    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
-);
-
--- Indexes for optimization
-CREATE INDEX idx_interactions_user_id ON interactions(user_id);
-CREATE INDEX idx_interactions_idea_id ON interactions(idea_id);
-CREATE INDEX idx_interactions_user_idea ON interactions(user_id, idea_id);
-
--- Indexes for optimization
-CREATE INDEX idx_engagements_user_id ON engagements(user_id);
-CREATE INDEX idx_engagements_idea_id ON engagements(idea_id);
-CREATE INDEX idx_engagements_user_idea ON engagements(user_id, idea_id);
-
-
--- Email verification table for verifying emails
-CREATE TABLE IF NOT EXISTS VerificationToken (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
-    token VARCHAR(255) NOT NULL,
-    user_id BIGINT NOT NULL,
-    expiry_date TIMESTAMP NOT NULL,
-    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
-);
+---- departments table
+--CREATE TABLE IF NOT EXISTS value_types (
+--    value_type_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--    name VARCHAR(255) NOT NULL UNIQUE
+--);
+--
+---- departments table
+--CREATE TABLE IF NOT EXISTS departments (
+--    department_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--    name VARCHAR(255) NOT NULL UNIQUE
+--);
+--
+--CREATE TABLE IF NOT EXISTS idea_verticals (
+--    vertical_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--    name VARCHAR(255) NOT NULL UNIQUE
+--);
+--
+---- Users table
+--CREATE TABLE IF NOT EXISTS `users` (
+--  `user_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+--  `first_name` VARCHAR(255) NOT NULL,
+--  `last_name` VARCHAR(255) NOT NULL,
+--  `email` VARCHAR(255) UNIQUE NOT NULL,
+--  `department_id` INT NOT NULL,
+--   `role` varchar(255) NOT NULL,
+--  `state` VARCHAR(255) NOT NULL,
+--  `branch` VARCHAR(255) NOT NULL,
+--  `password_hash` VARCHAR(255) NOT NULL,
+--  `email_verified` BOOLEAN NOT NULL DEFAULT FALSE,
+--  `interaction_count` INT NOT NULL DEFAULT 0,
+--  `idea_count` INT NOT NULL DEFAULT 0,
+--  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--  `created_by` INT NULL,
+--  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--  `updated_by` INT NULL,
+--    FOREIGN KEY (`department_id`) REFERENCES `departments`(`department_id`)
+--);
+--
+---- Challenges table
+--CREATE TABLE IF NOT EXISTS `challenges` (
+--  `challenge_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+--  `title` varchar(255) NOT NULL,
+--  `content` text NOT NULL,
+--  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--  `created_by` BIGINT NOT NULL,
+--  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--  `updated_by` BIGINT NULL,
+--    FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
+--    FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`)
+--);
+--
+---- Ideas table
+--CREATE TABLE IF NOT EXISTS `ideas` (
+--  `idea_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+--  `user_id` BIGINT NOT NULL,
+--  `challenge_id` INT,
+--   `vertical_id` INT NOT NULL,
+--  `value_type_id` INT NOT NULL,
+--  `title` VARCHAR(255) NOT NULL,
+--  `description` TEXT NOT NULL,
+--  `upvotes` INT NOT NULL DEFAULT 0,
+--  `engagement_count` INT NOT NULL DEFAULT 0,
+-- `status` enum('PENDING','APPROVED','REJECTED', 'IN-REVIEW') NOT NULL DEFAULT 'PENDING',
+-- `submission` enum('INDIVIDUAL','GROUP') NOT NULL DEFAULT 'INDIVIDUAL',
+--  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--  `created_by` BIGINT NOT NULL,
+--  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--  `updated_by` BIGINT NULL,
+--  FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+--  FOREIGN KEY (`vertical_id`) REFERENCES `idea_verticals`(`vertical_id`),
+--  FOREIGN KEY (`value_type_id`) REFERENCES `value_types`(`value_type_id`),
+--  FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
+--  FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`),
+--  FOREIGN KEY (`challenge_id`) REFERENCES `challenges`(`challenge_id`) ON DELETE CASCADE
+--);
+--
+---- Comments table
+--CREATE TABLE IF NOT EXISTS `comments` (
+--  `comment_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+--   `parent_id` BIGINT NULL,
+--  `idea_id` BIGINT NOT NULL,
+--  `user_id` BIGINT NOT NULL,
+--  `content` text NOT NULL,
+--  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--  `created_by` BIGINT NOT NULL,
+--  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--  `updated_by` BIGINT NULL,
+--    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+--    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`),
+--    FOREIGN KEY (`created_by`) REFERENCES `users`(`user_id`),
+--    FOREIGN KEY (`updated_by`) REFERENCES `users`(`user_id`)
+--);
+--
+---- Votes table
+--CREATE TABLE IF NOT EXISTS `votes` (
+--  `vote_id` BIGINT PRIMARY KEY AUTO_INCREMENT,
+--  `idea_id` BIGINT NOT NULL,
+--  `user_id` BIGINT NOT NULL,
+--  `upvote` BOOLEAN NOT NULL DEFAULT FALSE,
+--  `created_at` timestamp DEFAULT CURRENT_TIMESTAMP,
+--  `created_by` BIGINT NOT NULL,
+--  `updated_at` timestamp DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+--  `updated_by` BIGINT NULL,
+--   FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+--   FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
+--);
+--
+--CREATE TABLE interactions (
+--    interaction_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+--    user_id BIGINT NOT NULL,
+--    idea_id BIGINT NOT NULL,
+--    interaction_type ENUM('LIKE', 'COMMENT', 'CREATE') NOT NULL,
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+--    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
+--);
+--
+--CREATE TABLE engagements (
+--    engagement_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+--    user_id BIGINT NOT NULL,
+--    idea_id BIGINT NOT NULL,
+--    engagement_type ENUM('LIKE', 'COMMENT', 'VIEW') NOT NULL,
+--    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+--    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`),
+--    FOREIGN KEY (`idea_id`) REFERENCES `ideas` (`idea_id`)
+--);
+--
+---- Indexes for optimization
+--CREATE INDEX idx_interactions_user_id ON interactions(user_id);
+--CREATE INDEX idx_interactions_idea_id ON interactions(idea_id);
+--CREATE INDEX idx_interactions_user_idea ON interactions(user_id, idea_id);
+--
+---- Indexes for optimization
+--CREATE INDEX idx_engagements_user_id ON engagements(user_id);
+--CREATE INDEX idx_engagements_idea_id ON engagements(idea_id);
+--CREATE INDEX idx_engagements_user_idea ON engagements(user_id, idea_id);
+--
+--
+---- Email verification table for verifying emails
+--CREATE TABLE IF NOT EXISTS VerificationToken (
+--    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+--    token VARCHAR(255) NOT NULL,
+--    user_id BIGINT NOT NULL,
+--    expiry_date TIMESTAMP NOT NULL,
+--    FOREIGN KEY (`user_id`) REFERENCES `users`(`user_id`) ON DELETE CASCADE
+--);

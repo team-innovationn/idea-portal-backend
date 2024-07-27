@@ -36,8 +36,12 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
+    # Automatically create tables from entities
+    database-platform: org.hibernate.dialect.MySQLDialect
+    hibernate:
+      ddl-auto: create
     # Show sql queries made by spring data jpa
-    show-sql: false
+    show-sql: true
     properties:
       jakarta:
         persistence:
