@@ -25,6 +25,7 @@ public class InteractionServiceImpl implements InteractionService {
     @Override
     public Optional<User> getUserWithMostInteractions() {
         List<User> users = interactionRepository.findUserWithMostInteractions((Pageable) PageRequest.of(0, 1));
+        System.out.println(users.toString());
         return users.isEmpty() ? Optional.empty() : Optional.of(users.get(0));
     }
 

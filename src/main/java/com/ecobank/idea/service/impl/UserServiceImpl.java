@@ -15,7 +15,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
@@ -26,17 +25,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Page<User> fetchUsers(UserFetchRequestDTO requestDTO) {
-        String sortBy = "createdAt";
+        String sortBy;
+        Sort sort;
 
         if (null != requestDTO.getSortBy() || !requestDTO.getSortBy().isEmpty()) {
             sortBy = requestDTO.getSortBy();
+
+            // Build sort object
+            sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), sortBy);
         }
 
-        // Build sort object
-        Sort sort = Sort.by(Sort.Direction.fromString(requestDTO.getSortDirection().toLowerCase()), sortBy);
 
         // Define the Pageable variable
-        Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize(), sort);
+        Pageable pageable = PageRequest.of(requestDTO.getPage(), requestDTO.getSize());
 
         // Implemented filtering logic here, assuming `filter` is a simple keyword search in `title` and `description`.
         if (requestDTO.getFilter() != null && !requestDTO.getFilter().isEmpty()) {

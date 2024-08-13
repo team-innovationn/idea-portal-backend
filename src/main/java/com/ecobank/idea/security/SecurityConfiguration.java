@@ -33,7 +33,14 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
 
-                .authorizeHttpRequests(auth -> auth.requestMatchers(API_BASE_URL + "/auth/**").permitAll().requestMatchers(API_BASE_URL + "/ideas").permitAll().requestMatchers(API_BASE_URL + "/users").permitAll().requestMatchers(API_BASE_URL + "/idea/**").permitAll().requestMatchers(API_BASE_URL + "/challenges").denyAll().requestMatchers(API_BASE_URL + "/challenge").permitAll().requestMatchers(API_BASE_URL + "/sse/subscribe").denyAll()
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(API_BASE_URL + "/auth/**").permitAll()
+                        .requestMatchers(API_BASE_URL + "/ideas").permitAll()
+                        .requestMatchers(API_BASE_URL + "/users").permitAll()
+                        .requestMatchers(API_BASE_URL + "/idea/**").permitAll()
+                        .requestMatchers(API_BASE_URL + "/challenge").permitAll()
+                        .requestMatchers(API_BASE_URL + "/sse/subscribe").denyAll()
+                        .requestMatchers(API_BASE_URL + "/challenges").denyAll()
 
                         // Permit documentation requests
                         .requestMatchers("/docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll().anyRequest().authenticated())

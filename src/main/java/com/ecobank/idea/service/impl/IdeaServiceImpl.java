@@ -6,10 +6,10 @@ import com.ecobank.idea.dto.idea.IdeaDTO;
 import com.ecobank.idea.dto.idea.IdeaFetchRequestDTO;
 import com.ecobank.idea.dto.idea.IdeaStatisticsDTO;
 import com.ecobank.idea.entity.Challenge;
-import com.ecobank.idea.entity.ValueType;
-import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.Interaction;
 import com.ecobank.idea.entity.User;
+import com.ecobank.idea.entity.ValueType;
+import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.idea.IdeaVertical;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.mapper.IdeaMapper;
@@ -30,7 +30,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLOutput;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -99,7 +98,7 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public void updateIdeaStatus(Long ideaId, IdeaEnums.Status newStatus) {
-        Idea idea = ideaRepository.findById(ideaId).orElseThrow(() -> new ResourceNotFoundException("Idea not found with Id: " + ideaId ));
+        Idea idea = ideaRepository.findById(ideaId).orElseThrow(() -> new ResourceNotFoundException("Idea not found with Id: " + ideaId));
         idea.setStatus(newStatus);
         try {
             ideaRepository.save(idea);
@@ -180,6 +179,15 @@ public class IdeaServiceImpl implements IdeaService {
 
     @Override
     public IdeaStatisticsDTO getIdeaStatistics() {
-        return ideaRepository.getIdeaStatistics();
+        var totalIdeas = ideaRepository.countTotalIdeas();
+        var pendingIdeas = ideaRepository.countPendingIdeas();
+        var approvedIdeas = ideaRepository.countApprovedIdeas();
+        var rejectedIdeas = ideaRepository.countRejectedIdeas();
+        return IdeaStatisticsDTO.builder()
+                .mostApprovedIdeas(approvedIdeas)
+                .mostRejectedIdeas(rejectedIdeas)
+                .totalIdeas(totalIdeas)
+                .pendingIdeas(pendingIdeas)
+                .build();
     }
 }

@@ -9,12 +9,16 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface IdeaRepository extends JpaRepository<Idea, Long>, JpaSpecificationExecutor<Idea>  {
-    @Query("SELECT new com.ecobank.idea.dto.idea.IdeaStatisticsDTO(" +
-            "COUNT(i), " +
-            "SUM(CASE WHEN i.status = 'APPROVED' THEN 1 ELSE 0 END), " +
-            "SUM(CASE WHEN i.status = 'REJECTED' THEN 1 ELSE 0 END), " +
-            "SUM(CASE WHEN i.status = 'PENDING' THEN 1 ELSE 0 END)) " +
-            "FROM Idea i")
-    IdeaStatisticsDTO getIdeaStatistics();
+    @Query("SELECT COUNT(i) FROM Idea i")
+    Long countTotalIdeas();
+
+    @Query("SELECT COUNT(i) FROM Idea i WHERE i.status = 'PENDING'")
+    Long countPendingIdeas();
+
+    @Query("SELECT COUNT(i) FROM Idea i WHERE i.status = 'APPROVED'")
+    Long countApprovedIdeas();
+
+    @Query("SELECT COUNT(i) FROM Idea i WHERE i.status = 'REJECTED'")
+    Long countRejectedIdeas();
 
 }

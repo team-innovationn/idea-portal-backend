@@ -1,14 +1,11 @@
 package com.ecobank.idea.dto.idea;
 
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@Builder
 public class IdeaStatisticsDTO {
     private final long totalIdeas;
     private final long mostApprovedIdeas;

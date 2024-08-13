@@ -41,14 +41,14 @@ spring:
     hibernate:
       ddl-auto: create
     # Show sql queries made by spring data jpa
-    show-sql: true
+    show-sql: false
     properties:
       jakarta:
         persistence:
           validation:
             mode: none
       hibernate:
-        format_sql: true
+        format_sql: false
 
   # Show logs in colored mode
   output:
