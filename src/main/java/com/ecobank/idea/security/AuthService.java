@@ -4,12 +4,12 @@ import com.ecobank.idea.constants.AppConstants;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
-import com.ecobank.idea.entity.Department;
+//import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.Role;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.exception.UserAlreadyExistsException;
-import com.ecobank.idea.repository.DepartmentRepository;
+//import com.ecobank.idea.repository.DepartmentRepository;
 import com.ecobank.idea.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -24,7 +24,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository;
+//    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -37,8 +37,8 @@ public class AuthService {
         }
 
         // Retrieve user department
-        Department department = departmentRepository.findById(Long.valueOf(request.getDepartmentId()))
-                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
+//        Department department = departmentRepository.findById(Long.valueOf(request.getDepartmentId()))
+//                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
 
         // Build user
         User user = new User();
@@ -48,7 +48,7 @@ public class AuthService {
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole(Role.USER);
         user.setBranch(request.getBranch());
-        user.setDepartment(department);
+        user.setDepartment(request.getDepartment());
         user.setState(request.getState());
 
         // Save user to repository

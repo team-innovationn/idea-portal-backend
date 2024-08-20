@@ -1,10 +1,9 @@
 package com.ecobank.idea.init;
 
-import com.ecobank.idea.entity.Department;
+//import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.Role;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.entity.ValueType;
-import com.ecobank.idea.entity.idea.Idea;
 import com.ecobank.idea.entity.idea.IdeaVertical;
 import com.ecobank.idea.exception.ResourceNotFoundException;
 import com.ecobank.idea.repository.*;
@@ -20,7 +19,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class DataInitializer implements CommandLineRunner {
-    private final DepartmentRepository departmentRepository;
+//    private final DepartmentRepository departmentRepository;
     private final ValueTypeRepository valueTypeRepository;
     private final IdeaVerticalRepository ideaVerticalRepository;
     private final UserRepository userRepository;
@@ -33,13 +32,13 @@ public class DataInitializer implements CommandLineRunner {
         System.out.println("Initializing values in CommandLineRunner...");
 
         // List of departments
-        List<String> departments = new ArrayList<>(Arrays.asList("Consumer", "HR", "Clearing", "Treasury", "Legal", "Audit"));
-
-        for (String name : departments) {
-            Department department = new Department();
-            department.setName(name);
-            departmentRepository.save(department);
-        }
+//        List<String> departments = new ArrayList<>(Arrays.asList("Consumer", "HR", "Clearing", "Treasury", "Legal", "Audit"));
+//
+//        for (String name : departments) {
+//            Department department = new Department();
+//            department.setName(name);
+//            departmentRepository.save(department);
+//        }
 
         // List of Idea value types
         ValueType valueType = new ValueType();
@@ -70,15 +69,15 @@ public class DataInitializer implements CommandLineRunner {
         ideaVertical2.setName("Digital");
         ideaVerticalRepository.save(ideaVertical2);
 
-        // Retrieve user department
-        Department department1 = departmentRepository.findById(Long.valueOf("1"))
-                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
-
-        Department department2 = departmentRepository.findById(Long.valueOf("2"))
-                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
-
-        Department department3 = departmentRepository.findById(Long.valueOf("3"))
-                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
+//        // Retrieve user department
+//        Department department1 = departmentRepository.findById(Long.valueOf("1"))
+//                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
+//
+//        Department department2 = departmentRepository.findById(Long.valueOf("2"))
+//                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
+//
+//        Department department3 = departmentRepository.findById(Long.valueOf("3"))
+//                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
 
         User user = new User();
         user.setFirstName("userFname");
@@ -87,7 +86,7 @@ public class DataInitializer implements CommandLineRunner {
         user.setPassword(passwordEncoder.encode("password"));
         user.setRole(Role.USER);
         user.setBranch("Ikoyi");
-        user.setDepartment(department1);
+        user.setDepartment("Legal");
         user.setState("Lagos");
         userRepository.save(user);
 
@@ -98,7 +97,7 @@ public class DataInitializer implements CommandLineRunner {
         user1.setPassword(passwordEncoder.encode("password"));
         user1.setRole(Role.USER);
         user1.setBranch("Ikoyi");
-        user1.setDepartment(department1);
+        user1.setDepartment("EBS");
         user1.setState("Lagos");
         userRepository.save(user1);
 
@@ -109,7 +108,7 @@ public class DataInitializer implements CommandLineRunner {
         user2.setPassword(passwordEncoder.encode("password"));
         user2.setRole(Role.USER);
         user2.setBranch("Ikoyi");
-        user2.setDepartment(department1);
+        user2.setDepartment("Technology");
         user2.setState("Lagos");
         userRepository.save(user2);
 
@@ -120,7 +119,7 @@ public class DataInitializer implements CommandLineRunner {
         user3.setPassword(passwordEncoder.encode("password"));
         user3.setRole(Role.USER);
         user3.setBranch("Ikoyi");
-        user3.setDepartment(department1);
+        user3.setDepartment("RPC");
         user3.setState("Lagos");
         userRepository.save(user3);
 
@@ -132,7 +131,7 @@ public class DataInitializer implements CommandLineRunner {
         user4.setPassword(passwordEncoder.encode("password"));
         user4.setRole(Role.ADMIN);
         user4.setBranch("Ikoyi");
-        user4.setDepartment(department1);
+        user4.setDepartment("Treasury");
         user4.setState("Lagos");
         userRepository.save(user4);
     }

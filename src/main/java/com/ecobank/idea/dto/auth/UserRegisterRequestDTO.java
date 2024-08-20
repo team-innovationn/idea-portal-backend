@@ -29,7 +29,7 @@ public class UserRegisterRequestDTO {
     private String password;
 
     @NotBlank(message = "Department must not be blank")
-    private String departmentId;
+    private String department;
 
     @NotBlank(message = "State must not be blank")
     private String state;

@@ -1,9 +1,9 @@
 package com.ecobank.idea.service.impl;
 
 import com.ecobank.idea.dto.user.UserFetchRequestDTO;
-import com.ecobank.idea.entity.Department;
+//import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.User;
-import com.ecobank.idea.repository.DepartmentRepository;
+//import com.ecobank.idea.repository.DepartmentRepository;
 import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -21,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-    private final DepartmentRepository departmentRepository;
+//    private final DepartmentRepository departmentRepository;
 
     @Override
     public Page<User> fetchUsers(UserFetchRequestDTO requestDTO) {
@@ -47,8 +47,8 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-    @Override
-    public List<Department> fetchDepartments() {
-        return departmentRepository.findAll();
-    }
+//    @Override
+//    public List<Department> fetchDepartments() {
+//        return departmentRepository.findAll();
+//    }
 }

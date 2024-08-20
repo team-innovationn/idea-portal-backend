@@ -4,7 +4,7 @@ import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
-import com.ecobank.idea.entity.Department;
+//import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.entity.VerificationToken;
 import com.ecobank.idea.exception.ErrorResponseDTO;
@@ -89,18 +89,18 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(authService.authenticate(authRequestDTO));
     }
 
-    @Operation(
-            summary = "Fetch departments API",
-            description = "Retrieve all departments in the bank"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "HTTP Status OK"
-    )
-    @GetMapping("/departments")
-    public ResponseEntity<List<Department>> fetchDepartments() {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.fetchDepartments());
-    }
+//    @Operation(
+//            summary = "Fetch departments API",
+//            description = "Retrieve all departments in the bank"
+//    )
+//    @ApiResponse(
+//            responseCode = "200",
+//            description = "HTTP Status OK"
+//    )
+//    @GetMapping("/departments")
+//    public ResponseEntity<List<Department>> fetchDepartments() {
+//        return ResponseEntity.status(HttpStatus.OK).body(userService.fetchDepartments());
+//    }
 
     private void createVerificationToken(User user, String token) {
         VerificationToken verificationToken = new VerificationToken();

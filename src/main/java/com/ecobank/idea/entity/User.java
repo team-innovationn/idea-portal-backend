@@ -35,9 +35,10 @@ public class User implements UserDetails {
     private String email;
 
     // Foreign relationship with department - for integrity
-    @ManyToOne
-    @JoinColumn(name = "department_id", nullable = false)
-    private Department department;
+//    @ManyToOne
+//    @JoinColumn(name = "department_id", nullable = false)
+//    private Department department;
+    private String department;
 
     // Map value to Role Enum
     @Enumerated(EnumType.STRING)
