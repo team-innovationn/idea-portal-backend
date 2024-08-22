@@ -4,7 +4,6 @@ import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
-//import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.User;
 import com.ecobank.idea.entity.VerificationToken;
 import com.ecobank.idea.exception.ErrorResponseDTO;
@@ -21,6 +20,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -44,27 +44,6 @@ public class AuthController {
     private final AuthService authService;
     private final VerificationTokenRepository tokenRepository;
     private final UserService userService;
-//    private final EmailService emailService;
-
-
-    @Operation(
-            summary = "Register user API",
-            description = "Register a new user"
-    )
-    @ApiResponse(
-            responseCode = "200",
-            description = "HTTP Status CREATED"
-    )
-    @PostMapping("/register")
-    public ResponseEntity<ResponseDTO> registerUser(@Valid @RequestBody UserRegisterRequestDTO registerRequestDTO) {
-        User user = authService.register(registerRequestDTO);
-//        String token = UUID.randomUUID().toString();
-//        createVerificationToken(user, token);
-//        emailService.sendVerificationEmail(user.getEmail(), token);
-        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.CREATED, "Account created successfully!");
-//        ResponseDTO responseDTO = new ResponseDTO(HttpStatus.CREATED, "Check email for verification link");
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
-    }
 
 
     @Operation(
@@ -89,18 +68,14 @@ public class AuthController {
         return ResponseEntity.status(HttpStatus.OK).body(authService.authenticate(authRequestDTO));
     }
 
-//    @Operation(
-//            summary = "Fetch departments API",
-//            description = "Retrieve all departments in the bank"
-//    )
-//    @ApiResponse(
-//            responseCode = "200",
-//            description = "HTTP Status OK"
-//    )
-//    @GetMapping("/departments")
-//    public ResponseEntity<List<Department>> fetchDepartments() {
-//        return ResponseEntity.status(HttpStatus.OK).body(userService.fetchDepartments());
-//    }
+    @PostMapping("/users/add")
+    @ResponseStatus(HttpStatus.OK)
+    @Operation(summary = "Add multiple users to the platform")
+    // @PreAuthorize()
+    public ResponseEntity<ResponseDTO> multipleRegistration(@Valid @RequestBody List<UserRegisterRequestDTO> registerUserDTOS)
+            throws AuthenticationException {
+        return ResponseEntity.status(HttpStatus.OK).body(authService.registerMultipleUsers(registerUserDTOS));
+    }
 
     private void createVerificationToken(User user, String token) {
         VerificationToken verificationToken = new VerificationToken();

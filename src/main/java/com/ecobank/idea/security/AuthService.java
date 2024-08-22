@@ -1,65 +1,61 @@
 package com.ecobank.idea.security;
 
 import com.ecobank.idea.constants.AppConstants;
+import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.auth.AuthRequestDTO;
 import com.ecobank.idea.dto.auth.AuthResponseDTO;
 import com.ecobank.idea.dto.auth.UserRegisterRequestDTO;
-//import com.ecobank.idea.entity.Department;
 import com.ecobank.idea.entity.Role;
 import com.ecobank.idea.entity.User;
-import com.ecobank.idea.exception.ResourceNotFoundException;
-import com.ecobank.idea.exception.UserAlreadyExistsException;
-//import com.ecobank.idea.repository.DepartmentRepository;
 import com.ecobank.idea.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
-//    private final DepartmentRepository departmentRepository;
+    //    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
 
     // Save User in the DB
-    public User register(UserRegisterRequestDTO request) {
-        // Check if user exists
-        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
-            throw new UserAlreadyExistsException("User " + request.getEmail() + " already exists");
-        }
-
-        // Retrieve user department
-//        Department department = departmentRepository.findById(Long.valueOf(request.getDepartmentId()))
-//                .orElseThrow(() -> new ResourceNotFoundException("Department selected not found"));
-
-        // Build user
-        User user = new User();
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(Role.USER);
-        user.setBranch(request.getBranch());
-        user.setDepartment(request.getDepartment());
-        user.setState(request.getState());
-
-        // Save user to repository
-        User userSaved = null;
+    public ResponseDTO registerMultipleUsers(List<UserRegisterRequestDTO> registerRequestDTOS) {
         try {
-            userSaved = userRepository.save(user);
+            for (UserRegisterRequestDTO requestDTO : registerRequestDTOS) {
+                // Check if user exists
+                if (userRepository.findByEmail(requestDTO.getEmail()).isPresent()) {
+                    continue;
+                }
+                // Build user
+                User user = new User();
+                user.setFirstName(requestDTO.getFirstName());
+                user.setLastName(requestDTO.getLastName());
+                user.setEmail(requestDTO.getEmail());
+                user.setPassword(passwordEncoder.encode((requestDTO.getFirstName().substring(0, 1) + requestDTO.getLastName()).toLowerCase()));
+                user.setRole(Role.USER);
+                user.setBranch(requestDTO.getBranch());
+                user.setDepartment(requestDTO.getDepartment());
+                user.setState(requestDTO.getState());
+                userRepository.save(user);
+            }
+
         } catch (Exception e) {
-            log.error(e.getMessage());
-            throw new RuntimeException("Unable to save User " + e.getMessage());
+            log.error("Error saving account: " + e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
-        return userSaved;
+
+        return new ResponseDTO(HttpStatus.CREATED, "Users Added to the platform");
     }
 
     public AuthResponseDTO authenticate(AuthRequestDTO authRequestDTO) {

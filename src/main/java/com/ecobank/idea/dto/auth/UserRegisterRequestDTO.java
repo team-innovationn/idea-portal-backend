@@ -25,8 +25,8 @@ public class UserRegisterRequestDTO {
     @Email(message = "Please provide a valid email address")
     private String email;
 
-    @NotBlank(message = "Password must not be blank")
-    private String password;
+//    @NotBlank(message = "Password must not be blank")
+//    private String password;
 
     @NotBlank(message = "Department must not be blank")
     private String department;
