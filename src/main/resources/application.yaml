@@ -27,13 +27,12 @@ spring:
       password: root
       role: user
 
-  # Database config
+  # Database connection
   datasource:
-    # DATABASE connection
-    url: jdbc:mysql://localhost:3306/ideaPortal
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://${app.database.host}:${app.database.port}/${app.database.name}?createDatabaseIfNotExist=true&allowPublicKeyRetrieval=true&useSSL=FALSE
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${app.database.username}
+    password: ${app.database.password}
 
   jpa:
     # Automatically create tables from entities
@@ -59,6 +58,23 @@ spring:
 server:
   port:
     8085
+
+app:
+  application-name: idea-portal
+  application-email: eonyejeme@ecobank.com
+  google-client-id: 12854540090-72a2hh48sqamrsuel4l3f87kuppg0c8h.apps.googleusercontent.com
+  google-client-secret: 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
+  base-url: http://localhost
+  allowed-origins: http://localhost
+  login-page-url: ${app:base-url}/login
+  login-success-url: ${app.base-url}/login/success
+  login-failure-url: ${app.base-url}/login/error
+  database:
+    name: ideaPortal
+    username: root
+    password: root
+    host: localhost
+    port: 3306
 
 # Spring doc path
 springdoc:

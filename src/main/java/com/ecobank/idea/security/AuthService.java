@@ -24,7 +24,6 @@ import java.util.List;
 public class AuthService {
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
     private final UserRepository userRepository;
-    //    private final DepartmentRepository departmentRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final AuthenticationManager authenticationManager;
@@ -58,12 +57,25 @@ public class AuthService {
         return new ResponseDTO(HttpStatus.CREATED, "Users Added to the platform");
     }
 
+    //  Assign JWT to username password user
     public AuthResponseDTO authenticate(AuthRequestDTO authRequestDTO) {
         // Authenticate user
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequestDTO.getEmail(), authRequestDTO.getPassword()));
 
         // Fetch user
         User user = userRepository.findByEmail(authRequestDTO.getEmail()).orElseThrow();
+
+        // Generate token
+        String token = jwtUtil.generateToken(user);
+
+        // Return token
+        return new AuthResponseDTO(token, user, AppConstants.TOKEN_EXPIRATION_TIME);
+    }
+
+    // Assign JWT to Oauth User
+    public AuthResponseDTO authenticate(String email) {
+        // Fetch user
+        User user = userRepository.findByEmail(email).orElseThrow();
 
         // Generate token
         String token = jwtUtil.generateToken(user);
