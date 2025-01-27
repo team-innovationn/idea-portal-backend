@@ -94,9 +94,11 @@ public class CommentServiceImpl implements CommentService {
     // Reply to comment
     @Override
     public Comment replyToComment(CommentReplyDTO commentReplyDTO) {
+        String username = SecurityUtil.getCurrentUsername();
+        User user = userRepository.findByEmail(username).orElseThrow(() -> new ResourceNotFoundException("User not found. Contact support"));
+
         Comment parentComment = commentRepository.findById(commentReplyDTO.getCommentId()).orElseThrow(() -> new ResourceNotFoundException("Comment to reply does not exist"));
         Idea idea = parentComment.getIdea();
-        User user = parentComment.getUser();
 
         // Build up comment
         Comment childComment = new Comment();

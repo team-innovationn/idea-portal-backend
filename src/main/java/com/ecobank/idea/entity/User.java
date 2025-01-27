@@ -27,6 +27,9 @@ public class User implements UserDetails {
     @Column(name = "first_name")
     private String firstName;
 
+//    @Column(name = "username")
+//    private String username;
+
     @Column(name = "last_name")
     private String lastName;
 
@@ -34,10 +37,7 @@ public class User implements UserDetails {
     @Column(name = "email", unique = true)
     private String email;
 
-    // Foreign relationship with department - for integrity
-//    @ManyToOne
-//    @JoinColumn(name = "department_id", nullable = false)
-//    private Department department;
+    @Column(name = "department")
     private String department;
 
     // Map value to Role Enum
@@ -51,12 +51,15 @@ public class User implements UserDetails {
     @Column(name = "branch")
     private String branch;
 
-    @JsonIgnore
-    @Column(name = "password_hash")
-    private String password;
+//    @JsonIgnore
+//    @Column(name = "password_hash")
+//    private String password;
 
-    @Column(name = "email_verified")
-    private boolean emailVerified;
+//    @Column(name = "email_verified")
+//    private boolean emailVerified;
+
+    @Column(name = "profile_updated", nullable = false)
+    private boolean profileUpdated = false;
 
     @Column(name = "interaction_count")
     @JsonProperty("interactions")
@@ -75,6 +78,17 @@ public class User implements UserDetails {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
+    /**
+     * Returns the password used to authenticate the user.
+     *
+     * @return the password
+     */
+    @JsonIgnore
+    @Override
+    public String getPassword() {
+        return "";
+    }
+
     @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
@@ -87,9 +101,33 @@ public class User implements UserDetails {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public String getUsername() {
         return email;
+    }
+
+    /**
+     * Indicates whether the user's account has expired. An expired account cannot be
+     * authenticated.
+     *
+     * @return <code>true</code> if the user's account is valid (ie non-expired),
+     * <code>false</code> if no longer valid (ie expired)
+     */
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * Indicates whether the user is locked or unlocked. A locked user cannot be
+     * authenticated.
+     *
+     * @return <code>true</code> if the user is not locked, <code>false</code> otherwise
+     */
+    @JsonIgnore
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 }

@@ -5,7 +5,7 @@ public interface VoteService {
     /**
      * @param - To fetch idea to upvote
      */
-    void upVoteIdea(Long ideaId, Long userId);
+    void upVoteIdea(Long ideaId, String userEmail);
 
     /**
      * @param ideaId

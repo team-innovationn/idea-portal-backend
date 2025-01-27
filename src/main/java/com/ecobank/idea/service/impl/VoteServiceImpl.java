@@ -34,9 +34,14 @@ public class VoteServiceImpl implements VoteService {
 
     @Override
     @Transactional
-    public void upVoteIdea(Long ideaId, Long userId) {
+    public void upVoteIdea(Long ideaId, String userEmail) {
         // Fetch Idea
         Idea idea = getIdeaById(ideaId);
+
+        // Get user required for a vote entry
+        User user = getUserByEmail(userEmail);
+
+        long userId = user.getUserId();
 
         // Check if a vote entry exists
         Optional<Vote> userVote = voteRepository.findByUserIdAndIdeaId(userId, ideaId);
@@ -52,11 +57,9 @@ public class VoteServiceImpl implements VoteService {
                 throw new RuntimeException("Unable to delete vote: " + e.getMessage());
             }
         }
+
         // Create new vote
         Vote vote = new Vote();
-
-        // Get user required for a vote entry
-        User user = getUserById(userId);
 
         // Create a vote entry
         mapToVote(user, idea, vote);
@@ -91,6 +94,10 @@ public class VoteServiceImpl implements VoteService {
     // Fetch user by userId
     private User getUserById(Long userId) {
         return userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException("User not found to vote on idea"));
+    }
+
+    private User getUserByEmail(String userEmail) {
+        return userRepository.findByEmail(userEmail).orElseThrow(() -> new ResourceNotFoundException("User not found to vote on idea"));
     }
 
     // Fetch idea by ideaId

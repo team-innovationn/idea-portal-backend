@@ -11,20 +11,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 
-@OpenAPIDefinition(
-        info = @Info(
-                title = "Idea portal API documentation",
-                description = "A portal to share ideas on different challenges faced by the bank",
-                version = "v1",
-                contact = @Contact(
-                        name = "Innovation / Technology",
-                        email = "innovation@ecobank.com"
-                ),
-                license = @License(
-                        name = "Apache 2.0"
-                )
-        )
-)
 @SpringBootApplication
 @EnableJpaAuditing(auditorAwareRef = "auditAwareImpl")
 @EnableJpaRepositories("com.ecobank.idea.repository")

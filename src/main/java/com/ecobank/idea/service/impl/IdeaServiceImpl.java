@@ -51,6 +51,8 @@ public class IdeaServiceImpl implements IdeaService {
         // Get currently logged-in user;
         String username = SecurityUtil.getCurrentUsername();
 
+        System.out.println(username);
+
         // Fetch the user entity using the username
         User user = userRepository.findByEmail(username).orElseThrow(() -> new RuntimeException("An internal error has occurred! User not found. Contact support"));
 

@@ -9,7 +9,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public final class AuthRequestDTO {
+public class OTPRequestDTO {
     private String email;
-    private String token;
 }

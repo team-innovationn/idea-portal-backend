@@ -1,20 +1,19 @@
 package com.ecobank.idea.entity;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class VerificationToken {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,9 +21,12 @@ public class VerificationToken {
     @Column(name = "token")
     private String token;
 
-    @OneToOne(targetEntity = User.class, fetch = FetchType.EAGER)
-    @JoinColumn(nullable = false, name = "user_id")
-    private User user;
+    @Column(nullable = false)
+    private String email;
 
-    private Date expiryDate;
+    @Column(nullable = false)
+    private boolean used;
+
+    @Column(nullable = false)
+    private LocalDateTime expiryTime;
 }

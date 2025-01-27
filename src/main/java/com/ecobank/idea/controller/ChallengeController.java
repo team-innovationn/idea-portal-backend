@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -80,6 +82,8 @@ public class ChallengeController {
     @PostMapping("/challenge")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<ResponseDTO> createChallenge(@Valid @RequestBody ChallengeDTO challengeDTO) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println("Authorities: " + auth.getAuthorities());
         challengeService.saveChallenge(challengeDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Challenge created successfully"));
     }
@@ -112,6 +116,7 @@ public class ChallengeController {
         if (!isChallengeDeleted) {
             throw new ResourceNotFoundException("Challenge not found!");
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Challenge deleted successfully"));
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(new ResponseDTO(HttpStatus.CREATED, "Challenge deleted successfully"));
     }
 }

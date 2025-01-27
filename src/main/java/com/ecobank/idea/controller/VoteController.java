@@ -2,10 +2,11 @@ package com.ecobank.idea.controller;
 
 import com.ecobank.idea.dto.ResponseDTO;
 import com.ecobank.idea.dto.vote.VoteRequestDTO;
-import com.ecobank.idea.entity.User;
 import com.ecobank.idea.exception.ErrorResponseDTO;
+import com.ecobank.idea.repository.UserRepository;
 import com.ecobank.idea.service.SseService;
 import com.ecobank.idea.service.VoteService;
+import com.ecobank.idea.util.SecurityUtil;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,7 +18,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
@@ -33,6 +33,7 @@ import static com.ecobank.idea.constants.AppConstants.API_BASE_URL;
 public class VoteController {
     private final VoteService voteService;
     private final SseService sseService;
+    private final UserRepository userRepository;
 
     @Operation(
             summary = "Vote API",
@@ -62,15 +63,10 @@ public class VoteController {
         Long ideaId = Long.valueOf(voteRequestDTO.getIdeaId().trim());
 
         // Retrieve current logged-in user id
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        long userId;
-        if (!(principal instanceof User)) {
-            throw new RuntimeException("Unable to get ID of current logged in User");
-        }
-        userId = ((User) principal).getUserId();
+        String userEmail = SecurityUtil.getCurrentAccount().toString();
 
         // Vote or un-vote idea
-        voteService.upVoteIdea(ideaId, userId);
+        voteService.upVoteIdea(ideaId, userEmail);
 
 //        if (isUpvote) {
 //            // Emit a new comment event using the SseService

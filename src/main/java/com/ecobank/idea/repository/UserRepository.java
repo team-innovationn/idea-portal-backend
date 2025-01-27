@@ -1,6 +1,6 @@
 package com.ecobank.idea.repository;
 
-import com.ecobank.idea.constants.IdeaEnums;
+import com.ecobank.idea.entity.Role;
 import com.ecobank.idea.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,15 +16,19 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
 
+//    Optional<User> findByUsername(String username);
+
     @Query("SELECT u FROM User u ORDER BY u.interactionCount DESC")
     Optional<List<User>> findUsersWithMostInteractions();
 
-    Page<User> findAll(Pageable pageable);
+    // Method to find all users with ROLE_USER
+    Page<User> findAllByRole(Pageable pageable, Role role);
 
-    // Method to search users by first name and last name
-    @Query("SELECT u FROM User u WHERE LOWER(u.firstName) LIKE LOWER(CONCAT('%', :name, '%')) " +
-            "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :name, '%'))")
-    Page<User> searchByFirstNameOrLastName(@Param("name") String name, Pageable pageable);
+    // Method to search users by first name and last name with ROLE_USER
+    @Query("SELECT u FROM User u WHERE (LOWER(u.firstName) LIKE LOWER(CONCAT('%', :name, '%')) " +
+            "OR LOWER(u.lastName) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+            "AND u.role = 'ROLE_USER'")
+    Page<User> searchByFirstNameOrLastNameWithRoleUser(@Param("name") String name, Pageable pageable);
 
     // Sort Users by interactions
     Page<User> findAllByOrderByInteractionCountDesc(Pageable pageable);

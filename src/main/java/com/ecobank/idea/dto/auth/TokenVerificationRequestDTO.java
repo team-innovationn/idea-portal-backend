@@ -9,6 +9,6 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 @ToString
-public class TokenVerificiationRequestDTO {
+public class TokenVerificationRequestDTO {
     private String token;
 }

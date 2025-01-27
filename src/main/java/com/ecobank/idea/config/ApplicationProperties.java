@@ -13,6 +13,9 @@ import java.util.List;
 @Getter
 public class ApplicationProperties {
     private List<String> allowedOrigins;
+    private String microsoftIssuer;
+    private String microsoftJwksUrl;
+    private String microsoftClientId;
     private String googleClientId;
     private String googleClientSecret;
     private String applicationName;
@@ -23,4 +26,7 @@ public class ApplicationProperties {
     private String loginFailureUrl;
     private String adminUserEmail;
     private String adminUserPassword;
+    private String ldapUrl;
+    private String AdminUsername;
+
 }

@@ -2,12 +2,14 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.3.0</version>
+        <version>3.2.3</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
+
     <groupId>com.ecobank</groupId>
     <artifactId>idea</artifactId>
     <version>0.0.1-SNAPSHOT</version>
@@ -28,7 +30,7 @@
         <url/>
     </scm>
     <properties>
-        <java.version>22</java.version>
+        <java.version>21</java.version>
     </properties>
     <dependencies>
         <!-- Spring data JPA -->
@@ -120,19 +122,25 @@
             <artifactId>spring-boot-starter-validation</artifactId>
         </dependency>
 
-        <!-- Spring Oauth 2 Client -->
+        <!-- Spring LDAP Implementation -->
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-ldap</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.unboundid</groupId>
+            <artifactId>unboundid-ldapsdk</artifactId>
         </dependency>
 
-        <!-- Google API Client -->
         <dependency>
-            <groupId>com.google.api-client</groupId>
-            <artifactId>google-api-client</artifactId>
-            <version>2.7.0</version>
+            <groupId>org.bitbucket.b_c</groupId>
+            <artifactId>jose4j</artifactId>
+            <version>0.9.6</version>
         </dependency>
-
     </dependencies>
 
     <build>
