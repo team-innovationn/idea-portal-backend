@@ -109,5 +109,6 @@ public class VoteServiceImpl implements VoteService {
     private void mapToVote(User user, Idea idea, Vote vote) {
         vote.setUser(user);
         vote.setIdea(idea);
+        vote.setCreatedBy(String.valueOf(user.getUserId()));
     }
 }

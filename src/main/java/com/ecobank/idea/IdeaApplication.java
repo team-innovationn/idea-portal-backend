@@ -21,5 +21,4 @@ public class IdeaApplication {
     public static void main(String[] args) {
         SpringApplication.run(IdeaApplication.class, args);
     }
-
 }

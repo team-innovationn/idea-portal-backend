@@ -1,6 +1,7 @@
 package com.ecobank.idea.entity;
 
 import com.ecobank.idea.entity.idea.Idea;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
@@ -26,6 +27,7 @@ public class Challenge extends BaseEntity {
     @NotBlank(message = "Content must not be blank")
     private String content;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "challenge")
     private List<Idea> ideas;
 }

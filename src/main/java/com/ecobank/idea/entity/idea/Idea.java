@@ -25,7 +25,6 @@ public class Idea extends BaseEntity {
     @JoinColumn(name = "user_id", nullable = false)         // Specify the foreign key relationship
     private User user;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "challenge_id")
     private Challenge challenge;

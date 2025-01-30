@@ -90,10 +90,11 @@ public class IdeaController {
     // Create new Idea
     @Operation(summary = "Idea create API", description = "Create ideas")
     @ApiResponses({@ApiResponse(responseCode = "200", description = "HTTP Status OK"), @ApiResponse(responseCode = "500", description = "HTTP Status Internal Server Error", content = @Content(schema = @Schema(implementation = ErrorResponseDTO.class)))})
-    @PostMapping("/idea")
     @PreAuthorize("hasAuthority('USER')")
     @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/idea")
     public ResponseEntity<ResponseDTO> createIdea(@Valid @RequestBody IdeaDTO ideaDTO) {
+        System.out.println(ideaDTO);
         ideaService.createIdea(ideaDTO);
         return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDTO(HttpStatus.CREATED, "Idea created successfully"));
     }

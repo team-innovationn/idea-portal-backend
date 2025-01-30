@@ -2,11 +2,11 @@ spring:
   application:
     name: idea
 
-  ldap:
-    embedded:
-      ldif: classpath:test-server.ldif
-      base-dn: dc=springframework,dc=org
-      port: 8389
+#  ldap:
+#    embedded:
+#      ldif: classpath:test-server.ldif
+#      base-dn: dc=springframework,dc=org
+#      port: 8389
 
   #  Configure default username and password
   security:
@@ -72,9 +72,9 @@ app:
   admin-username: oomoriwo@ecobank.com
   base-url: http://localhost
   allowed-origins: http://localhost
-  ldap-url: ldap://localhost:8389/dc=springframework,dc=org
-  ldap:
-    port: 8389
+#  ldap-url: ldap://localhost:8389/dc=springframework,dc=org
+#  ldap:
+#    port: 8389
   database:
     name: ideaPortal
     username: root

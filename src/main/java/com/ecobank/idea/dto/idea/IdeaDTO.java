@@ -1,6 +1,7 @@
 package com.ecobank.idea.dto.idea;
 
 import com.ecobank.idea.constants.IdeaEnums;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class IdeaDTO {
+    @JsonProperty("challengeId")
     private String challenge_id;
 
     @NotBlank(message = "Title must not be blank")

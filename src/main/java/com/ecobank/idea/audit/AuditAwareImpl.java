@@ -16,8 +16,8 @@ public class AuditAwareImpl implements AuditorAware<String> {
     public Optional<String> getCurrentAuditor() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         int id = 0;
-        if (principal instanceof User) {
-            id = ((User) principal).getUserId();
+        if (principal instanceof String) {
+            return Optional.of((String) principal);
         }
         return Optional.of(String.valueOf(id));
     }

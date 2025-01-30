@@ -91,7 +91,9 @@ public class UserServiceImpl implements UserService {
         user.setLastName(requestDTO.getLastName());
         user.setEmail(userEmail);
         user.setState(requestDTO.getState());
-        user.setRole(Role.USER);
+        if (user.getRole() == null) {
+            user.setRole(Role.USER);
+        }
         user.setProfileUpdated(true);
         try {
             return userRepository.save(user);

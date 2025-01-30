@@ -35,6 +35,24 @@ public class DataInitializer implements CommandLineRunner {
         persistValueTypeIfNotExists("Platform / Channel upgrade");
         persistValueTypeIfNotExists("Revenue generation");
 
+        persistIdeaVerticalIfNotExists("Technology & Digital Innovation");
+        persistIdeaVerticalIfNotExists("Operations");
+        persistIdeaVerticalIfNotExists("Product Development ");
+        persistIdeaVerticalIfNotExists("Customer Service & Support ");
+        persistIdeaVerticalIfNotExists("Marketing & Branding ");
+        persistIdeaVerticalIfNotExists("Compliance & Legal ");
+        persistIdeaVerticalIfNotExists("Cybersecurity Enhancement");
+        persistIdeaVerticalIfNotExists("Process Automation ");
+        persistIdeaVerticalIfNotExists("Innovation");
+        persistIdeaVerticalIfNotExists("Payment Solution ");
+        persistIdeaVerticalIfNotExists("Credit & Lending Services ");
+        persistIdeaVerticalIfNotExists("Investment & Wealth Management ");
+        persistIdeaVerticalIfNotExists("Branch Network Optimization ");
+        persistIdeaVerticalIfNotExists("HR & Employee Training ");
+        persistIdeaVerticalIfNotExists("Supply Chain & Vendor Management");
+        persistIdeaVerticalIfNotExists("Customer Education & Financial Literacy");
+        persistIdeaVerticalIfNotExists("Customer Onboarding & KYC");
+
 //        List of Vertical types
         persistIdeaVerticalIfNotExists("Operations");
         persistIdeaVerticalIfNotExists("Tech");
